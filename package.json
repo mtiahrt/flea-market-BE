@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "postgraphile": "^4.10.0"
+  }
+}
