@@ -1,1 +1,1 @@
-web: postgraphile -c $RDS_URL --plugins @graphile/pg-pubsub --subscriptions --simple-subscriptions
+web: postgraphile --plugins @graphile/pg-pubsub --subscriptions --simple-subscriptions -c $RDS_URL
