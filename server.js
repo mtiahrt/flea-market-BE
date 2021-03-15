@@ -24,7 +24,7 @@ try {
       enhanceGraphiql: true,
     })
   );
-  app.listen($PORT);
+  app.listen(process.env.PORT);
   console.log(
     `🚀 Server ready brower url https://flea-market-service.herokuapp.com/graphiql`
   );
