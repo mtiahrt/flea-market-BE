@@ -1,6 +1,16 @@
 {
+  "name": "fleamart-be",
+  "version": "1.0.0",
+  "description": "backend service for the flea market app",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Mark Tiahrt",
+  "license": "ISC",
   "dependencies": {
+    "@graphile/pg-pubsub": "^4.11.0",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
-    "postgraphile": "^4.10.0"
+    "express": "^4.17.1",
+    "postgraphile": "^4.11.0"
   }
 }
