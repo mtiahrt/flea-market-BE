@@ -3,10 +3,17 @@ const express = require("express");
 const { postgraphile, makePluginHook } = require("postgraphile");
 const { default: PgPubsub } = require("@graphile/pg-pubsub");
 const app = express();
+require("dotenv").config();
 const pluginHook = makePluginHook([PgPubsub]);
+
+// const pgPool = new pg.Pool({
+//   connectionString: $RDS_URL,
+// });
+
 const pgPool = new pg.Pool({
-  connectionString: $RDS_URL,
+  connectionString: process.env.RDS_URL,
 });
+
 try {
   app.use(
     postgraphile(pgPool, ["public"], {
