@@ -4,23 +4,26 @@ const { postgraphile, makePluginHook } = require("postgraphile");
 const { default: PgPubsub } = require("@graphile/pg-pubsub");
 const app = express();
 const pluginHook = makePluginHook([PgPubsub]);
-
 const pgPool = new pg.Pool({
   connectionString: $RDS_URL,
 });
-app.use(
-  postgraphile(pgPool, ["public"], {
-    pluginHook,
-    subscriptions: true,
-    simpleSubscriptions: true,
-    graphiql: true,
-    enhanceGraphiql: true,
-  })
-);
-app.listen($PORT);
-console.log(
-  `🚀 Server ready brower url https://flea-market-service.herokuapp.com/graphiql`
-);
+try {
+  app.use(
+    postgraphile(pgPool, ["public"], {
+      pluginHook,
+      subscriptions: true,
+      simpleSubscriptions: true,
+      graphiql: true,
+      enhanceGraphiql: true,
+    })
+  );
+  app.listen($PORT);
+  console.log(
+    `🚀 Server ready brower url https://flea-market-service.herokuapp.com/graphiql`
+  );
+} catch (error) {
+  console.log(error);
+}
 
 //from old proc file
 //web: postgraphile -c $RDS_URL --watch --simple-collections only --subscriptions
