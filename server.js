@@ -17,6 +17,7 @@ try {
     postgraphile(pgPool, ["public"], {
       appendPlugins: [PgSimplifyInflectorPlugin],
       pluginHook,
+      simpleCollections: "only",
       subscriptions: true,
       watchPg: true,
       simpleSubscriptions: true,
@@ -33,6 +34,5 @@ try {
 }
 
 //from old proc file
-//web: postgraphile -c $RDS_URL --watch --simple-collections only --subscriptions
-// --enhance-graphiql --cors --host 0.0.0.0 --port $PORT --show-error-stack=json
-//--append-plugins @graphile-contrib/pg-simplify-inflector
+//web: postgraphile --simple-collections only
+// --cors --show-error-stack=json
