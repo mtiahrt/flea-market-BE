@@ -7,9 +7,13 @@ const PgSimplifyInflectorPlugin = require("@graphile-contrib/pg-simplify-inflect
 const app = express();
 require("dotenv").config();
 const pluginHook = makePluginHook([PgPubsub]);
-
+const databaseURL = `postgres://${process.env.POSTGRES_USER}:` + 
+                               `${process.env.POSTGRES_PASSWORD}@`+
+                               `${process.env.POSTGRES_HOST}:` +
+                               `${process.env.POSTGRES_PORT}/` + 
+                               `${process.env.POSTGRES_DB}`;
 const pgPool = new pg.Pool({
-  connectionString: process.env.RDS_URL,
+  connectionString: databaseURL,
 });
 
 try {
@@ -33,7 +37,3 @@ try {
 } catch (error) {
   console.log(error);
 }
-
-//from old proc file
-//web: postgraphile
-// --cors --show-error-stack=json
