@@ -32,7 +32,7 @@ try {
   );
   app.listen(process.env.PORT);
   console.log(
-    `🚀 Server ready brower url https://flea-market-service.herokuapp.com/graphiql`
+    `🚀 Server ready brower url ${process.env.POSTGRES_HOST}:${process.env.PORT}/graphiql`
   );
 } catch (error) {
   console.log(error);
