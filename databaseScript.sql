@@ -1,9 +1,9 @@
---drop table sale_item;
---drop table subcategory;
---drop table category;
+--DROP TABLE public.item_image;
+--drop table public.sale_item;
+--drop table public.subcategory;
+--drop table public.category;
 
 --run this script against the postgres db in the public schema
-
 CREATE TABLE category (
 id SERIAL PRIMARY KEY,
 name varchar(100) NOT NULL,
@@ -30,7 +30,19 @@ CREATE TABLE public.sale_item (
 	CONSTRAINT sale_item_pkey PRIMARY KEY (id)
 );
 
-ALTER TABLE public.sale_item ADD CONSTRAINT fk_sale_item FOREIGN KEY (subcategory_id) REFERENCES subcategory(id);
+ALTER TABLE public.sale_item ADD CONSTRAINT fk_sale_item FOREIGN KEY (subcategory_id) 
+REFERENCES subcategory(id);
+
+CREATE TABLE public.item_image (
+	id serial NOT NULL,
+	sale_item_id int4 NOT NULL,
+	url varchar NOT NULL,
+	CONSTRAINT item_image_pk PRIMARY KEY (id)
+);
+-- public.item_image foreign keys
+ALTER TABLE public.item_image ADD CONSTRAINT item_image_fk FOREIGN KEY (sale_item_id) 
+REFERENCES public.sale_item(id) ON DELETE CASCADE;
+
 
 CREATE SCHEMA app_private AUTHORIZATION postgres;
 
@@ -65,6 +77,7 @@ insert
 
 ALTER TABLE public.sale_item ADD CONSTRAINT fk_sale_item FOREIGN KEY (subcategory_id) REFERENCES subcategory(id);
 
+--Table Inserts
 INSERT INTO public.category
 (id, "name", description)
 values
@@ -119,3 +132,9 @@ values
 (2, '1969 Western Belted Shirt Denim Dress', 'GAP', 45.63),
 (2, 'Womens bracelet. Adjustable', 'D''Bello', 25.21),
 (2, '14k Rose Gold Plated Designer Stud Earrings', 'Boutique', 150);
+
+INSERT INTO public.item_image (sale_item_id,url) VALUES
+(1,'https://media.pnca.edu/system/assets/5bf31603-1061-423b-a823-5ac478d67974/large/pnca_5bf31603-1061-423b-a823-5ac478d67974_large.jpg?1437580908'),
+(1,'https://media.pnca.edu/system/assets/785aa38a-aea2-4613-9d01-2b700c184166/large/pnca_785aa38a-aea2-4613-9d01-2b700c184166_large.jpg?1437581001'),
+(1,'https://media.pnca.edu/system/assets/5bf31603-1061-423b-a823-5ac478d67974/square/pnca_5bf31603-1061-423b-a823-5ac478d67974_square.jpg?1437580908'),
+(1,'https://media.pnca.edu/system/assets/785aa38a-aea2-4613-9d01-2b700c184166/square/pnca_785aa38a-aea2-4613-9d01-2b700c184166_square.jpg?1437581001');

@@ -11,3 +11,6 @@ api use https://flea-market-service.herokuapp.com/graphql
 instructions for rebuilding this service is here https://www.graphile.org/postgraphile/deploying-heroku/
 
 Heroku repo https://git.heroku.com/flea-market-service.git
+
+use .env.example to set up your env file.  
+
