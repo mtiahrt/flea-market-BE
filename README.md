@@ -16,3 +16,21 @@ Heroku repo https://git.heroku.com/flea-market-service.git
 
 To turn on the database on aws go to
 https://us-east-2.console.aws.amazon.com/rds/home?region=us-east-2#database:id=flea-market;is-cluster=false
+
+
+# Docker
+followed this artical 
+https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
+
+to build the image
+docker build . -t postgraphile_api
+
+to run the image
+docker run -p 8080:8080 -d postgraphile_api
+
+
+
+todo:
+for docker compose start with
+https://github.com/derekjwilliams/covid-19-graphql/blob/master/docker-compose-with-postgres.yml
+
