@@ -19,18 +19,9 @@ https://us-east-2.console.aws.amazon.com/rds/home?region=us-east-2#database:id=f
 
 
 # Docker
-followed this artical 
-https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
 
-to build the image
-docker build . -t postgraphile_api
+to build the image run this command in the root of the project<br>
+```docker build . -t postgraphile_api```
 
-to run the image
-docker run -p 8080:8080 -d postgraphile_api
-
-
-
-todo:
-for docker compose start with
-https://github.com/derekjwilliams/covid-19-graphql/blob/master/docker-compose-with-postgres.yml
-
+to run the image<br>
+```docker run -p 8080:8080 -d postgraphile_api```
