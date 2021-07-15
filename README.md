@@ -19,9 +19,11 @@ https://us-east-2.console.aws.amazon.com/rds/home?region=us-east-2#database:id=f
 
 
 # Docker
-
 to build the image run this command in the root of the project<br>
 ```docker build . -t postgraphile_api```
 
 to run the image<br>
 ```docker run -p 8080:8080 -d postgraphile_api```
+## Docker Compose
+To run the node and db service in a docker compose network at the root of the project run<br>
+```docker-compose up```
