@@ -27,3 +27,9 @@ to run the image<br>
 ## Docker Compose
 To run the node and db service in a docker compose network at the root of the project run<br>
 ```docker-compose up```
+
+### DockerCompose Networking
+Networking is not setup yet.  To get by you have to update your IP in the POSTGRES_HOST key value in .env file
+To get your current IP on command line<br>
+```ifconfig```<br>
+Then do a search for "192". 192.168 is reserved for the local host.  ignore the ip ending with 255
