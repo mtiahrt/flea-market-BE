@@ -38,13 +38,13 @@ try {
       key: fs.readFileSync('server.key'),
       cert: fs.readFileSync('server.cert')
     }, app).listen(process.env.PORT, function () {
-      console.log(`🚀 Server is Ready listening on port ${process.env.PORT}! Go to https://localhost:${process.env.PORT}/`)
+      console.log(`🚀 Development Server is Ready listening on port ${process.env.PORT}! Go to https://localhost:${process.env.PORT}/`)
     });
   }else{
     //for prod server https is already done by heroku
     app.listen(process.env.PORT);
     console.log(
-      `🚀 Server ready brower url ${process.env.POSTGRES_HOST}:${process.env.PORT}/graphiql`
+      `🚀 Prod Server ready brower url ${process.env.POSTGRES_HOST}:${process.env.PORT}/graphiql`
     );
   }
 
