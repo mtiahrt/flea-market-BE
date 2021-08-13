@@ -32,4 +32,6 @@ To run the node and db service in a docker compose network at the root of the pr
 Networking is not setup yet.  To get by you have to update your IP in the POSTGRES_HOST key value in .env file
 To get your current IP on command line<br>
 ```ifconfig```<br>
-Then do a search for "192". 192.168 is reserved for the local host.  ignore the ip ending with 255
+Then do a search for "192". 192.168 is reserved for the local host.  ignore the ip ending with 255<br>
+### Update on Docker Networking ### 
+Networking should be working now when running container locally. 
