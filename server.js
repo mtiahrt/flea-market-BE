@@ -1,5 +1,7 @@
 const pg = require("pg");
 const fs = require('fs');
+const loginStrategy = require('./oAuth/LoginStrategy');
+const cors = require('cors');
 const express = require("express");
 const https = require('https')
 const { postgraphile, makePluginHook } = require("postgraphile");
@@ -9,6 +11,13 @@ const PgSimplifyInflectorPlugin = require("@graphile-contrib/pg-simplify-inflect
 try {
   const app = express();
   require("dotenv").config();
+
+  if(process.env.DEVELOPMENT){//dev only
+    app.use(cors({
+        origin: 'https://localhost:3000'
+    }));
+  }
+
   const pluginHook = makePluginHook([PgPubsub]);
   const databaseURL = `postgres://${process.env.POSTGRES_USER}:` + 
                                 `${process.env.POSTGRES_PASSWORD}@`+
@@ -32,6 +41,17 @@ try {
       enhanceGraphiql: true,
     })
   );
+
+  app.get("/userProfile", async(request, response) => {
+    try{
+      const strategyResponse = await loginStrategy.retriveUserProfile(request.query.code, request.query.provider);
+      response.json(strategyResponse);
+    } catch (ex) {
+      response.json({"code": 500, "exception": JSON.stringify(ex.message) })
+    }
+  });
+  
+
 //use https for development so all browsers work for testing
   if(process.env.DEVELOPMENT) {
     https.createServer({
@@ -47,7 +67,6 @@ try {
       `🚀 Prod Server ready brower url ${process.env.POSTGRES_HOST}:${process.env.PORT}/graphiql`
     );
   }
-
 } catch (error) {
   console.log(error);
 }
