@@ -44,12 +44,23 @@ try {
 
   app.get("/userProfile", async(request, response) => {
     try{
-      const strategyResponse = await loginStrategy.retriveUserProfile(request.query.code, request.query.provider);
+      //todo facebook auth is broken.  needs to be adjusted now that
+      //ALL query parameters are being sent in 
+      const strategyResponse = await loginStrategy.retriveUserProfile(request.query, request.query.provider);
       response.json(strategyResponse);
     } catch (ex) {
       response.json({"code": 500, "exception": JSON.stringify(ex.message) })
     }
   });
+
+  app.post("/twitter/requestToken", async (request, response) => {
+    try{
+      const requestToken = await loginStrategy.retriveTwitterRequestToken();
+      response.json(requestToken);
+    } catch(ex) {
+      response.json({"code": 500, "exception getting Twitter request token": JSON.stringify(ex.message) })
+    }
+  })
   
 
 //use https for development so all browsers work for testing
