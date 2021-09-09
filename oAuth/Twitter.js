@@ -9,7 +9,7 @@ function Twitter(codes) {
 
 Twitter.prototype.getRequestToken = function() {
     const request = {
-        url: `https://api.twitter.com/oauth/request_token?oauth_callback=${process.env.REDIRECT_URL}`,
+        url: `https://api.twitter.com/oauth/request_token?oauth_callback=${process.env.TWITTER_REDIRECT_URL}`,
         method: 'POST',
     };
     const authHeader = this.createAuth1Header(request);
