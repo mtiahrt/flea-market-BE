@@ -1,5 +1,5 @@
 const axios = require('axios');
-function Facebook(code)
+function Facebook({code})
 {
   this.accessToken = '';
   this.code = code;

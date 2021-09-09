@@ -44,8 +44,6 @@ try {
 
   app.get("/userProfile", async(request, response) => {
     try{
-      //todo facebook auth is broken.  needs to be adjusted now that
-      //ALL query parameters are being sent in 
       const strategyResponse = await loginStrategy.retriveUserProfile(request.query, request.query.provider);
       response.json(strategyResponse);
     } catch (ex) {

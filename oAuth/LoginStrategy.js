@@ -1,18 +1,21 @@
 const Facebook = require('./Facebook').Facebook;
 const Twitter = require('./Twitter').Twitter;
+const Google = require('./Google').Google;
 
-function providerFactory(provider, code) {
+function providerFactory(provider, codes) {
   switch(provider) {
     case 'facebook':
-      return new Facebook(code);
+      return new Facebook(codes);
     case 'twitter':
-      return new Twitter(code)
+      return new Twitter(codes)
+    case 'google':
+      return new Google(codes);
   }
 }
-const retriveUserProfile = (code, provider) => {
+const retriveUserProfile = (codes, provider) => {
   const getUserProfile = new GetUserProfile();
-  getUserProfile.setStrategy(providerFactory(provider, code));
-  return getUserProfile.getProfileAndToken(code);
+  getUserProfile.setStrategy(providerFactory(provider, codes));
+  return getUserProfile.getProfileAndToken();
 }
 
 const retriveTwitterRequestToken = () => {
