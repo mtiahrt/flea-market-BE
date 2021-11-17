@@ -1,20 +1,18 @@
 services:
   db:
     build: ./db
+    restart: always
+    networks: 
+        - network
     ports:
         - '5432:5432'
   app:
     build: .
-    environment:
-      POSTGRES_PORT: 5432
-      PORT: 8080
-      POSTGRES_PASSWORD: 'postgres'
-      DEVELOPMENT: 'true'
-      POSTGRES_SCHEMA: 'public'
-      POSTGRES_DB: 'postgres'
-      POSTGRES_USER: 'postgres'
-      POSTGRES_HOST: 'db'
-    ports:
-        - '8080:8080'
     depends_on:
         - db
+    networks:
+        - network
+    ports:
+        - 8080:8080
+networks:
+    network:

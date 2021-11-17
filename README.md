@@ -28,10 +28,34 @@ to run the image<br>
 To run the node and db service in a docker compose network at the root of the project run<br>
 ```docker-compose up```
 
-### DockerCompose Networking
-Networking is not setup yet.  To get by you have to update your IP in the POSTGRES_HOST key value in .env file
-To get your current IP on command line<br>
-```ifconfig```<br>
-Then do a search for "192". 192.168 is reserved for the local host.  ignore the ip ending with 255<br>
-### Update on Docker Networking ### 
+## Update on Docker Networking ### 
 Networking should be working now when running container locally. 
+
+## Add SSL certs
+I follow the information found here:<br>
+https://flaviocopes.com/express-https-self-signed-certificate/
+
+First install openssl
+```
+brew install openssl
+```
+next run open ssl to generate the certs so OAUTH connections work locally
+
+```
+openssl req -nodes -new -x509 -keyout server.key -out server.cert
+```
+### In the prompts enter the following values:
+Country Name (2 letter code)<br> 
+US<br> 
+State or Province Name (full name)<br> 
+Colorado<br> 
+Locality Name (eg, city)<br> 
+Fort Collins
+Organization Name (eg, company)<br> 
+Tiahrt<br> 
+Organizational Unit Name (eg, section)<br> 
+<br> 
+Common Name (eg, fully qualified host name)<br> 
+localhost<br> 
+Email Address<br> 
+mark.tiahrt@outlook.com

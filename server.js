@@ -32,6 +32,7 @@ try {
     postgraphile(pgPool, ["public"], {
       appendPlugins: [PgSimplifyInflectorPlugin],
       pluginHook,
+      retryOnInitFail: true,
       enableCors: true,
       simpleCollections: "only",
       subscriptions: true,
@@ -73,7 +74,7 @@ try {
     //for prod server https is already done by heroku
     app.listen(process.env.PORT);
     console.log(
-      `🚀 Prod Server ready brower url ${process.env.POSTGRES_HOST}:${process.env.PORT}/graphiql`
+      `🚀 Prod Server ready brower url localhost:${process.env.PORT}/graphiql`
     );
   }
 } catch (error) {
