@@ -1,11 +1,3 @@
---
--- PostgreSQL database dump
---
-
--- Dumped from database version 13.2
--- Dumped by pg_dump version 13.2
-
--- Started on 2021-07-14 12:43:44 MDT
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -18,18 +10,7 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
---
--- TOC entry 6 (class 2615 OID 16495)
--- Name: app_private; Type: SCHEMA; Schema: -; Owner: -
---
-
 CREATE SCHEMA app_private;
-
-
---
--- TOC entry 210 (class 1255 OID 16496)
--- Name: notify_sale_item_insert(); Type: FUNCTION; Schema: app_private; Owner: -
---
 
 CREATE FUNCTION app_private.notify_sale_item_insert() RETURNS trigger
     LANGUAGE plpgsql
@@ -45,21 +26,10 @@ END;
 $$;
 
 
---
--- TOC entry 211 (class 1255 OID 16498)
--- Name: validate_subscription(text); Type: FUNCTION; Schema: app_private; Owner: -
---
-
 CREATE FUNCTION app_private.validate_subscription(topic text) RETURNS text
     LANGUAGE sql STABLE
     AS $$
  select 'CANCEL_ALL_SUBSCRIPTIONS'::text;
 $$;
 
-
--- Completed on 2021-07-14 12:43:44 MDT
-
---
--- PostgreSQL database dump complete
---
 
