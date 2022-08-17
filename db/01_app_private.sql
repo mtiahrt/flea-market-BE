@@ -18,7 +18,7 @@ CREATE FUNCTION app_private.notify_sale_item_insert() RETURNS trigger
 begin
 	 perform pg_notify( 'postgraphile:saleItemInsertHappen',
   		json_build_object('__node__', 
-    		json_build_array('sale_items',(select max(id) from public.sale_item))
+    		json_build_array('sale_items',(select max(id) from fleamarket.sale_item))
   		)::text
 	  );
 return NEW;

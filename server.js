@@ -29,7 +29,7 @@ try {
   });
 
   app.use(
-    postgraphile(pgPool, ["public"], {
+    postgraphile(pgPool, ["fleamarket"], {
       appendPlugins: [PgSimplifyInflectorPlugin],
       pluginHook,
       retryOnInitFail: true,
