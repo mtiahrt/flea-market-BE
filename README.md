@@ -1,39 +1,25 @@
- This is a back node server for a graphQL service. Powered by Postgraphile
+This is a back node server for a graphQL service. Powered by [Postgraphile](https://www.graphile.org/)
 
-This service is running on Heroku. The postgress database is hosted on AWS. all the heavy lifting has been done by postgraphile. https://www.graphile.org/
+All the heavy lifting has been done by postgraphile. https://www.graphile.org/
 
-Enviroment varables are need to be set to build the database url.  This URL will point postgraphile to your database to build your graphql server.  An example file of all the enviroment varables are included in this repo.
+Environment variables `.env` are needed to be set to build the database url.  This URL will point postgraphile to your database to build your graphql server.  
+An example file of all the environment variables are included in this repo.
 
-First, build you postgres db with the script provide in this repo.  Create a .env file at the root of the project.  copy the example env file to the .env file.  add your password.  
+First download and install postgres
+https://postgresapp.com/downloads.html
 
-current url for this service. for development use https://flea-market-service.herokuapp.com/
+note: you will also need something to interact with postgres.  I recommend [DBeaver](https://dbeaver.io/download/)
 
-api use https://flea-market-service.herokuapp.com/graphql
-
-instructions for rebuilding this service is here https://www.graphile.org/postgraphile/deploying-heroku/
-
-Heroku repo https://git.heroku.com/flea-market-service.git
-
-To turn on the database on aws go to
-https://us-east-2.console.aws.amazon.com/rds/home?region=us-east-2#database:id=flea-market;is-cluster=false
+Second, build your postgres db with the scripts provide in this repo inside the `db` folder.  Create a .env file at the root of the project.  copy the example env file to the .env file.  add your passwords.  
 
 
-# Docker
-to build the image run this command in the root of the project<br>
-```docker build . -t postgraphile_api```
-
-to run the image<br>
-```docker run -p 8080:8080 -d postgraphile_api```
-## Docker Compose
-To run the node and db service in a docker compose network at the root of the project run<br>
-```docker-compose up```
-
-## Update on Docker Networking ### 
-Networking should be working now when running container locally. 
 
 ## Add SSL certs
-I follow the information found here:<br>
+SSL certs are need because for the auth with Facebook, Google, Twitter.
+I follow the information found here:
+
 https://flaviocopes.com/express-https-self-signed-certificate/
+But I will explain what is needed for ssl certs to work correctly next
 
 First install openssl
 ```
@@ -51,11 +37,57 @@ State or Province Name (full name)<br>
 Colorado<br> 
 Locality Name (eg, city)<br> 
 Fort Collins
+
 Organization Name (eg, company)<br> 
-Tiahrt<br> 
-Organizational Unit Name (eg, section)<br> 
-<br> 
-Common Name (eg, fully qualified host name)<br> 
-localhost<br> 
-Email Address<br> 
+Tiahrt
+
+Organizational Unit Name (eg, section)
+
+Common Name (eg, fully qualified host name)
+
+localhost
+
+Email Address
+
 mark.tiahrt@outlook.com
+
+2 files will be generated `server.cert` and `server.key`.  Add those files to the root of this project if they are not already.
+ note:  these same 2 certs also have to be copied over to the FE project too.  
+
+Note: for a Mac you will have to tell your machine to trust the cert.  Here is how...
+
+### Mac cert install
+Open your keychain.  `cmd + space` type keychain access. In keychain access click
+1. "login" on the left.
+2. click File/import items in the menu at the top.
+3. Select the server.cert file from its location.  Should be in the root of this project
+
+Once it is added you need to tell the browser in this case Chrome to trust it.  
+In keychain access
+1. select the `certificates` tab at the top left
+2. double-click on the local host cert
+3. expand the `Trust` option
+4. Select "When using this certificate: Always Trust"
+    - This should set all the drop downs items to "Always Trust"
+5. save and close
+6. close and restart chrome.
+
+api use https://localhost:8080/graphql
+
+api testing and docs use: https://localhost:8080/graphiql
+
+
+
+
+# Docker
+to build the image run this command in the root of the project<br>
+```docker build . -t postgraphile_api```
+
+to run the image<br>
+```docker run -p 8080:8080 -d postgraphile_api```
+## Docker Compose
+To run the node and db service in a docker compose network at the root of the project run<br>
+```docker-compose up```
+
+## Update on Docker Networking ### 
+Networking should be working now when running container locally. 
