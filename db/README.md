@@ -6,7 +6,7 @@ To create the dmp files for docker to load
 
 ```pg_dump --verbose --host=localhost --port=5432 --username=postgres  --format=p --no-privileges --no-owner -n "app_private" postgres > 01_app_private.sql```
 
-```pg_dump --verbose --host=localhost --port=5432 --username=postgres  --format=p --no-privileges --no-owner -n "public" postgres > 02_public.sql```
+```pg_dump --verbose --host=localhost --port=5432 --username=postgres  --format=p --no-privileges --no-owner -n "fleamarket" postgres > 02_fleamarket.sql```
 
 ```pg_dump --verbose --host=localhost --port=5432 --username=postgres  --format=p --no-privileges --no-owner -n "postgraphile_watch" postgres > 03_postgraphile_watch.sql```
 
@@ -41,4 +41,4 @@ pg_hba.conf line 12:<br>
 postgresql.conf line 58:<br>
 ```listen_addresses='*' #only for dev, narrow this for production```
 # TODO
-move all tables and functions out of public and into the app_private schema
+move all tables and functions out of fleamarket and into the app_private schema
