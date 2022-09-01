@@ -15,7 +15,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 
-CREATE TABLE fleamarket.category (
+CREATE TABLE IF NOT exists fleamarket.category (
     id integer NOT NULL,
     name character varying(100) NOT NULL,
     description character varying(100)
@@ -27,7 +27,7 @@ CREATE TABLE fleamarket.category (
 -- Name: category_id_seq; Type: SEQUENCE; Schema: fleamarket; Owner: -
 --
 
-CREATE SEQUENCE fleamarket.category_id_seq
+CREATE SEQUENCE IF NOT exists fleamarket.category_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -37,14 +37,14 @@ CREATE SEQUENCE fleamarket.category_id_seq
 
 ALTER SEQUENCE fleamarket.category_id_seq OWNED BY fleamarket.category.id;
 
-CREATE TABLE fleamarket.item_image (
+CREATE TABLE IF NOT exists fleamarket.item_image (
     id integer NOT NULL,
     sale_item_id integer NOT NULL,
     url character varying NOT NULL
 );
 
 
-CREATE SEQUENCE fleamarket.item_image_id_seq
+CREATE SEQUENCE IF NOT exists fleamarket.item_image_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -56,7 +56,7 @@ CREATE SEQUENCE fleamarket.item_image_id_seq
 ALTER SEQUENCE fleamarket.item_image_id_seq OWNED BY fleamarket.item_image.id;
 
 
-CREATE TABLE fleamarket.sale_item (
+CREATE TABLE IF NOT exists fleamarket.sale_item (
     id integer NOT NULL,
     subcategory_id integer,
     name character varying(100) NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE fleamarket.sale_item (
     price numeric(5,2)
 );
 
-CREATE SEQUENCE fleamarket.sale_item_id_seq
+CREATE SEQUENCE IF NOT exists fleamarket.sale_item_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -77,7 +77,7 @@ CREATE SEQUENCE fleamarket.sale_item_id_seq
 ALTER SEQUENCE fleamarket.sale_item_id_seq OWNED BY fleamarket.sale_item.id;
 
 
-CREATE TABLE fleamarket.subcategory (
+CREATE TABLE IF NOT exists fleamarket.subcategory (
     id integer NOT NULL,
     category_id integer,
     name character varying NOT NULL,
@@ -85,7 +85,7 @@ CREATE TABLE fleamarket.subcategory (
 );
 
 
-CREATE SEQUENCE fleamarket.subcategory_id_seq
+CREATE SEQUENCE IF NOT exists fleamarket.subcategory_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1

@@ -29,18 +29,18 @@ try {
   });
 
   app.use(
-    postgraphile(pgPool, ["fleamarket"], {
-      appendPlugins: [PgSimplifyInflectorPlugin],
-      pluginHook,
-      retryOnInitFail: true,
-      enableCors: true,
-      simpleCollections: "only",
-      subscriptions: true,
-      watchPg: true,
-      simpleSubscriptions: true,
-      graphiql: true,
-      enhanceGraphiql: true,
-    })
+      postgraphile(pgPool, process.env.POSTGRES_SCHEMA, {
+        appendPlugins: [PgSimplifyInflectorPlugin],
+        pluginHook,
+        retryOnInitFail: true,
+        enableCors: true,
+        simpleCollections: "only",
+        subscriptions: true,
+        watchPg: true,
+        simpleSubscriptions: true,
+        graphiql: true,
+        enhanceGraphiql: true,
+      })
   );
 
   app.get("/userProfile", async(request, response) => {
@@ -68,13 +68,13 @@ try {
       key: fs.readFileSync('server.key'),
       cert: fs.readFileSync('server.cert')
     }, app).listen(process.env.PORT, function () {
-      console.log(`🚀 Development Server is Ready listening on port ${process.env.PORT}! Go to https://localhost:${process.env.PORT}/`)
+      console.log(`🚀 Development Server is Ready listening on port ${process.env.PORT}! Go to https://localhost:${process.env.PORT}/graphiql`)
     });
   }else{
     //for prod server https is already done by heroku
     app.listen(process.env.PORT);
     console.log(
-      `🚀 Prod Server ready brower url localhost:${process.env.PORT}/graphiql`
+      `🚀 Prod Server ready browser url localhost:${process.env.PORT}/graphiql`
     );
   }
 } catch (error) {

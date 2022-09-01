@@ -12,7 +12,7 @@ SET row_security = off;
 
 CREATE SCHEMA app_private;
 
-CREATE FUNCTION app_private.notify_sale_item_insert() RETURNS trigger
+CREATE OR REPLACE FUNCTION app_private.notify_sale_item_insert() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 begin
@@ -26,7 +26,7 @@ END;
 $$;
 
 
-CREATE FUNCTION app_private.validate_subscription(topic text) RETURNS text
+CREATE OR REPLACE FUNCTION app_private.validate_subscription(topic text) RETURNS text
     LANGUAGE sql STABLE
     AS $$
  select 'CANCEL_ALL_SUBSCRIPTIONS'::text;

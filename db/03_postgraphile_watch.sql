@@ -13,7 +13,7 @@ SET row_security = off;
 CREATE SCHEMA postgraphile_watch;
 
 
-CREATE FUNCTION postgraphile_watch.notify_watchers_ddl() RETURNS event_trigger
+CREATE OR REPLACE FUNCTION postgraphile_watch.notify_watchers_ddl() RETURNS event_trigger
     LANGUAGE plpgsql
     AS $$
 begin
@@ -31,7 +31,7 @@ $$;
 
 
 
-CREATE FUNCTION postgraphile_watch.notify_watchers_drop() RETURNS event_trigger
+CREATE OR REPLACE FUNCTION postgraphile_watch.notify_watchers_drop() RETURNS event_trigger
     LANGUAGE plpgsql
     AS $$
 begin
