@@ -22,11 +22,6 @@ CREATE TABLE IF NOT exists fleamarket.category (
 );
 
 
---
--- TOC entry 202 (class 1259 OID 16459)
--- Name: category_id_seq; Type: SEQUENCE; Schema: fleamarket; Owner: -
---
-
 CREATE SEQUENCE IF NOT exists fleamarket.category_id_seq
     AS integer
     START WITH 1
