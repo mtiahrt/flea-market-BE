@@ -72,6 +72,12 @@ In keychain access
 5. save and close
 6. close and restart chrome.
 
+install yarn to run the app
+`npm install --global yarn`
+`yarn` to install deps
+`yarn start` to run the app
+
+
 api use https://localhost:8080/graphql
 
 api testing and docs use: https://localhost:8080/graphiql
@@ -80,6 +86,7 @@ api testing and docs use: https://localhost:8080/graphiql
 
 
 # Docker
+## Docker set up isn't complete yet.  
 to build the image run this command in the root of the project<br>
 ```docker build . -t postgraphile_api```
 
