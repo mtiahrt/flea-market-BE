@@ -35,7 +35,8 @@ ALTER SEQUENCE fleamarket.category_id_seq OWNED BY fleamarket.category.id;
 CREATE TABLE IF NOT exists fleamarket.item_image (
     id integer NOT NULL,
     sale_item_id integer NOT NULL,
-    url character varying NOT NULL
+    url character varying NOT NULL,
+    public_id character varying
 );
 
 
