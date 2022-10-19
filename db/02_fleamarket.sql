@@ -89,8 +89,28 @@ CREATE SEQUENCE IF NOT exists fleamarket.subcategory_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
 ALTER SEQUENCE fleamarket.subcategory_id_seq OWNED BY fleamarket.subcategory.id;
+
+CREATE TABLE fleamarket.cart (
+	id serial4 NOT NULL,
+	userId varchar(200) NOT NULL,
+	sale_item_id int4 NOT NULL,
+	date_added date null default now(),
+	CONSTRAINT cart_pkey PRIMARY KEY (id)
+);
+
+
+CREATE SEQUENCE IF NOT exists fleamarket.cart_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE fleamarket.cart_id_seq OWNED BY fleamarket.cart.id;
+
+
 
 ALTER TABLE ONLY fleamarket.category ALTER COLUMN id SET DEFAULT nextval('fleamarket.category_id_seq'::regclass);
 
@@ -193,7 +213,6 @@ INSERT INTO fleamarket.subcategory (id, category_id, name, description) VALUES
 SELECT pg_catalog.setval('fleamarket.category_id_seq', 8, false);
 
 
-
 SELECT pg_catalog.setval('fleamarket.item_image_id_seq', 3, true);
 
 
@@ -235,4 +254,6 @@ ALTER TABLE ONLY fleamarket.subcategory
 ALTER TABLE ONLY fleamarket.item_image
     ADD CONSTRAINT item_image_fk FOREIGN KEY (sale_item_id) REFERENCES fleamarket.sale_item(id) ON DELETE CASCADE;
 
+ALTER TABLE fleamarket.cart
+    ADD CONSTRAINT fk_sale_item FOREIGN KEY (sale_item_id) REFERENCES fleamarket.sale_item(id);
 
