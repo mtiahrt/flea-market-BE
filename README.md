@@ -83,6 +83,9 @@ api use https://localhost:8080/graphql
 api testing and docs use: https://localhost:8080/graphiql
 
 
+### Setting up Image bucket on AWS
+The aws keys ```AWS_IMAGES_ACCESS_KEY_ID``` and ```AWS_IMAGES_SECRET_ACCESS_KEY``` are generated on aws.  These keys are created
+by making a IAM user and a AWS S3 bucket.  I followed this video to set this up.  [Upload Images Directly to S3 from Front End](https://www.youtube.com/watch?v=yGYeYJpRWPM&list=LL&index=1&t=2s&ab_channel=SamMeech-Ward)
 
 
 # Docker
