@@ -13,6 +13,7 @@ const s3 = new aws.S3({
     secretAccessKey,
     signatureVersion: 'v4'
 });
+
 async function generateUploadImageURL() {
     const uuid = uuidv4();
     console.log(uuid)
@@ -24,7 +25,18 @@ async function generateUploadImageURL() {
     const uploadURL = await s3.getSignedUrlPromise('putObject', params);
     return uploadURL;
 }
-``
+
+async function generateDeleteImageURL(publicId) {
+    const params = ({
+        Bucket: bucketName,
+        Key: publicId,
+        Expires: 60
+    });
+    const deleteURL = await s3.getSignedUrlPromise('deleteObject', params);
+    return deleteURL;
+}
+
+
 module.exports = {
-    generateUploadImageURL
+    generateUploadImageURL, generateDeleteImageURL
 }

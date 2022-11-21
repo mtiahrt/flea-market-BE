@@ -6,7 +6,7 @@ const https = require('https')
 const {postgraphile, makePluginHook} = require("postgraphile");
 const {default: PgPubsub} = require("@graphile/pg-pubsub");
 const PgSimplifyInflectorPlugin = require("@graphile-contrib/pg-simplify-inflector");
-const {generateUploadImageURL} = require("./s3Images");
+const {generateUploadImageURL, generateDeleteImageURL} = require("./s3Images");
 
 try {
     const app = express();
@@ -45,7 +45,14 @@ try {
 
     //TODO lock down this end point with Auth...
     app.get('/secureImageURL', async (req, res) => {
-        const url = await generateUploadImageURL()
+        const url = await generateUploadImageURL();
+        res.send({url})
+    })
+
+    //TODO lock down this end point with Auth...
+    app.get('/secureImageDeleteURL', async (req, res) => {
+        const publicID = req.query.publicId
+        const url = await generateDeleteImageURL(publicID);
         res.send({url})
     })
 
