@@ -34,7 +34,7 @@ ALTER SEQUENCE fleamarket.category_id_seq OWNED BY fleamarket.category.id;
 
 CREATE TABLE IF NOT exists fleamarket.item_image (
     id integer NOT NULL,
-    sale_item_id integer NOT NULL,
+    inventory_id integer NOT NULL,
     url character varying NOT NULL,
     public_id character varying
 );
@@ -52,7 +52,7 @@ CREATE SEQUENCE IF NOT exists fleamarket.item_image_id_seq
 ALTER SEQUENCE fleamarket.item_image_id_seq OWNED BY fleamarket.item_image.id;
 
 
-CREATE TABLE IF NOT exists fleamarket.sale_item (
+CREATE TABLE IF NOT exists fleamarket.inventory (
     id integer NOT NULL,
     subcategory_id integer,
     name character varying(100) NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT exists fleamarket.sale_item (
     price numeric(5,2)
 );
 
-CREATE SEQUENCE IF NOT exists fleamarket.sale_item_id_seq
+CREATE SEQUENCE IF NOT exists fleamarket.inventory_id_seq
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -70,7 +70,7 @@ CREATE SEQUENCE IF NOT exists fleamarket.sale_item_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE fleamarket.sale_item_id_seq OWNED BY fleamarket.sale_item.id;
+ALTER SEQUENCE fleamarket.inventory_id_seq OWNED BY fleamarket.inventory.id;
 
 
 CREATE TABLE IF NOT exists fleamarket.subcategory (
@@ -94,7 +94,7 @@ ALTER SEQUENCE fleamarket.subcategory_id_seq OWNED BY fleamarket.subcategory.id;
 CREATE TABLE fleamarket.cart (
 	id serial4 NOT NULL,
 	userId varchar(200) NOT NULL,
-	sale_item_id int4 NOT NULL,
+	inventory_id int4 NOT NULL,
 	date_added date null default now(),
 	CONSTRAINT cart_pkey PRIMARY KEY (id)
 );
@@ -118,7 +118,7 @@ ALTER TABLE ONLY fleamarket.category ALTER COLUMN id SET DEFAULT nextval('fleama
 ALTER TABLE ONLY fleamarket.item_image ALTER COLUMN id SET DEFAULT nextval('fleamarket.item_image_id_seq'::regclass);
 
 
-ALTER TABLE ONLY fleamarket.sale_item ALTER COLUMN id SET DEFAULT nextval('fleamarket.sale_item_id_seq'::regclass);
+ALTER TABLE ONLY fleamarket.inventory ALTER COLUMN id SET DEFAULT nextval('fleamarket.inventory_id_seq'::regclass);
 
 ALTER TABLE ONLY fleamarket.subcategory ALTER COLUMN id SET DEFAULT nextval('fleamarket.subcategory_id_seq'::regclass);
 
@@ -133,13 +133,13 @@ INSERT INTO fleamarket.category (id, name, description) values
 (7,	'Sale','Price discounted');
 
 
-INSERT INTO fleamarket.item_image (id, sale_item_id, url) values
+INSERT INTO fleamarket.item_image (id, inventory_id, url) values
 (1,1,'https://media.pnca.edu/system/assets/5bf31603-1061-423b-a823-5ac478d67974/square/pnca_5bf31603-1061-423b-a823-5ac478d67974_square.jpg?1437580908'),
 (2,1,'https://media.pnca.edu/system/assets/785aa38a-aea2-4613-9d01-2b700c184166/square/pnca_785aa38a-aea2-4613-9d01-2b700c184166_square.jpg?1437581001');
 
 
 
-INSERT INTO fleamarket.sale_item (id, subcategory_id, name, description, manufacturer_name, price) VALUES
+INSERT INTO fleamarket.inventory (id, subcategory_id, name, description, manufacturer_name, price) VALUES
 (1,1,'Mens','winter jacket','High Sierra',102.25),
 (2,1,'Texas A&M','Captivating Headgear', 'Forever Summer', 23.30),
 (3,1,'Pinehurst golf cap','adjustable back','Sweet hats',23.30),
@@ -216,7 +216,7 @@ SELECT pg_catalog.setval('fleamarket.category_id_seq', 8, false);
 SELECT pg_catalog.setval('fleamarket.item_image_id_seq', 3, true);
 
 
-SELECT pg_catalog.setval('fleamarket.sale_item_id_seq', 39, true);
+SELECT pg_catalog.setval('fleamarket.inventory_id_seq', 39, true);
 
 
 SELECT pg_catalog.setval('fleamarket.subcategory_id_seq', 30, true);
@@ -230,20 +230,20 @@ ALTER TABLE ONLY fleamarket.item_image
     ADD CONSTRAINT item_image_pk PRIMARY KEY (id);
 
 
-ALTER TABLE ONLY fleamarket.sale_item
-    ADD CONSTRAINT sale_item_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY fleamarket.inventory
+    ADD CONSTRAINT inventory_pkey PRIMARY KEY (id);
 
 
 ALTER TABLE ONLY fleamarket.subcategory
     ADD CONSTRAINT subcategory_pkey PRIMARY KEY (id);
 
 
-CREATE TRIGGER sale_item_inserts AFTER INSERT ON fleamarket.sale_item FOR EACH ROW EXECUTE
-FUNCTION app_private.notify_sale_item_insert();
+CREATE TRIGGER inventory_inserts AFTER INSERT ON fleamarket.inventory FOR EACH ROW EXECUTE
+FUNCTION app_private.notify_inventory_insert();
 
 
-ALTER TABLE ONLY fleamarket.sale_item
-    ADD CONSTRAINT fk_sale_item FOREIGN KEY (subcategory_id) REFERENCES fleamarket.subcategory(id);
+ALTER TABLE ONLY fleamarket.inventory
+    ADD CONSTRAINT fk_inventory FOREIGN KEY (subcategory_id) REFERENCES fleamarket.subcategory(id);
 
 
 ALTER TABLE ONLY fleamarket.subcategory
@@ -252,8 +252,8 @@ ALTER TABLE ONLY fleamarket.subcategory
 
 
 ALTER TABLE ONLY fleamarket.item_image
-    ADD CONSTRAINT item_image_fk FOREIGN KEY (sale_item_id) REFERENCES fleamarket.sale_item(id) ON DELETE CASCADE;
+    ADD CONSTRAINT item_image_fk FOREIGN KEY (inventory_id) REFERENCES fleamarket.inventory(id) ON DELETE CASCADE;
 
 ALTER TABLE fleamarket.cart
-    ADD CONSTRAINT fk_sale_item FOREIGN KEY (sale_item_id) REFERENCES fleamarket.sale_item(id);
+    ADD CONSTRAINT fk_inventory FOREIGN KEY (inventory_id) REFERENCES fleamarket.inventory(id);
 

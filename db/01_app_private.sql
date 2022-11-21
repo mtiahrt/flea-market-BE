@@ -12,13 +12,13 @@ SET row_security = off;
 
 CREATE SCHEMA app_private;
 
-CREATE OR REPLACE FUNCTION app_private.notify_sale_item_insert() RETURNS trigger
+CREATE OR REPLACE FUNCTION app_private.notify_inventory_insert() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 begin
-	 perform pg_notify( 'postgraphile:saleItemInsertHappen',
+	 perform pg_notify( 'postgraphile:inventoryInsertHappen',
   		json_build_object('__node__', 
-    		json_build_array('sale_items',(select max(id) from fleamarket.sale_item))
+    		json_build_array('inventory',(select max(id) from fleamarket.inventory))
   		)::text
 	  );
 return NEW;
