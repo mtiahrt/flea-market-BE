@@ -16,244 +16,179 @@ SET default_table_access_method = heap;
 
 
 CREATE TABLE IF NOT exists fleamarket.category (
-    id integer NOT NULL,
+    id INT generated always as identity primary key,
     name character varying(100) NOT NULL,
     description character varying(100)
 );
 
 
-CREATE SEQUENCE IF NOT exists fleamarket.category_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER SEQUENCE fleamarket.category_id_seq OWNED BY fleamarket.category.id;
-
-CREATE TABLE IF NOT exists fleamarket.item_image (
-    id integer NOT NULL,
-    inventory_id integer NOT NULL,
-    url character varying NOT NULL,
-    public_id character varying
+CREATE TABLE IF NOT exists fleamarket.subcategory (
+    id INT generated always as identity primary key,
+    category_id integer,
+    name character varying NOT NULL,
+    description character varying,
+    constraint fk_subcategory_category_id foreign key(category_id) references fleamarket.category(id)
 );
 
-
-CREATE SEQUENCE IF NOT exists fleamarket.item_image_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE fleamarket.item_image_id_seq OWNED BY fleamarket.item_image.id;
-
-
 CREATE TABLE IF NOT exists fleamarket.inventory (
-    id integer NOT NULL,
+    id INT generated always as identity primary key,
     subcategory_id integer,
     name character varying(100) NOT NULL,
     description character varying,
     manufacturer_name character varying(100),
-    price numeric(5,2)
+    price numeric(5,2),
+    quantity int NULL DEFAULT 1,
+    constraint fk_inventory_subcategory_id foreign key(subcategory_id) references fleamarket.subcategory(id)
 );
 
-CREATE SEQUENCE IF NOT exists fleamarket.inventory_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE fleamarket.inventory_id_seq OWNED BY fleamarket.inventory.id;
-
-
-CREATE TABLE IF NOT exists fleamarket.subcategory (
-    id integer NOT NULL,
-    category_id integer,
-    name character varying NOT NULL,
-    description character varying
+CREATE TABLE IF NOT exists fleamarket.item_image (
+    id INT generated always as identity primary key,
+    inventory_id integer NOT NULL,
+    url character varying NOT NULL,
+    public_id character varying,
+    constraint fk_item_image_inventory_id foreign key(inventory_id) references fleamarket.inventory(id)
 );
 
-
-CREATE SEQUENCE IF NOT exists fleamarket.subcategory_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-ALTER SEQUENCE fleamarket.subcategory_id_seq OWNED BY fleamarket.subcategory.id;
 
 CREATE TABLE fleamarket.cart (
-	id serial4 NOT NULL,
+    id INT generated always as identity primary key,
 	userId varchar(200) NOT NULL,
 	inventory_id int4 NOT NULL,
 	date_added date null default now(),
-	CONSTRAINT cart_pkey PRIMARY KEY (id)
+	constraint fk_cart_inventory_id foreign key (inventory_id) references fleamarket.inventory(id)
 );
 
+CREATE TABLE IF NOT exists fleamarket.purchase (
+    id INT generated always as identity primary key,
+    inventory_id integer,
+    product_name character varying(100) NOT NULL,
+    product_description character varying,
+    manufacturer_name character varying(100),
+    price numeric(5,2),
+    quantity int NULL DEFAULT 1,
+    purchaser_name_id integer,
+    address_id integer,
+    shipping_address_id integer
+);
 
-CREATE SEQUENCE IF NOT exists fleamarket.cart_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
+CREATE TABLE IF NOT exists fleamarket.name (
+    id INT generated always as identity primary key,
+    user_id character varying,
+    first_name character varying(100) NOT NULL,
+    last_name character varying(100) NOT NULL,
+    phone_number character varying(100)
+);
 
-ALTER SEQUENCE fleamarket.cart_id_seq OWNED BY fleamarket.cart.id;
+CREATE TABLE IF NOT exists fleamarket.address (
+    id INT generated always as identity primary key,
+    address_line_1 character varying NOT NULL,
+    address_line_2 character varying,
+    city character varying(100) not null,
+    state_abbr character varying(2) NOT NULL,
+    zip_code character varying(10) not null,
+    billing_address boolean not null,
+    shipping_address boolean not null
+);
 
+create table if not exists fleamarket.name_address (
+	name_id int references fleamarket.name (id) on update cascade,
+	address_id int references fleamarket.address (id) on update cascade,
+	constraint name_address_pkey primary key (name_id, address_id)
+);
 
+CREATE TABLE IF NOT exists fleamarket.purchase (
+    id INT generated always as identity primary key,
+    name_id integer,
+ 	shipping_address_id integer,
+    billing_address_id integer,
+    inventory_id integer,
+    product_name character varying(100) NOT NULL,
+    product_description character varying,
+    manufacturer_name character varying(100),
+    price numeric(5,2),
+    quantity int NULL DEFAULT 1,
+    purchase_date date not null default CURRENT_DATE,
+    constraint fk_purchase_name_id foreign key (name_id) references fleamarket.name(id),
+    constraint fk_purchase_shipping_address_id foreign key (shipping_address_id)  references fleamarket.address(id),
+    constraint fk_purchase_billing_address_id foreign key (billing_address_id)  references fleamarket.address(id)
 
-ALTER TABLE ONLY fleamarket.category ALTER COLUMN id SET DEFAULT nextval('fleamarket.category_id_seq'::regclass);
+);
 
+INSERT INTO fleamarket.category (name, description) values
+('Clothes','Clothing Apparel'),
+('Jewelry and Accessories','Gems and valuables'),
+('Fine Things','Art and Collectables'),
+('Household','Household goods'),
+('Books','Good Reads'),
+('New Arrivals','Our latest products'),
+('Sale','Price discounted');
 
-ALTER TABLE ONLY fleamarket.item_image ALTER COLUMN id SET DEFAULT nextval('fleamarket.item_image_id_seq'::regclass);
-
-
-ALTER TABLE ONLY fleamarket.inventory ALTER COLUMN id SET DEFAULT nextval('fleamarket.inventory_id_seq'::regclass);
-
-ALTER TABLE ONLY fleamarket.subcategory ALTER COLUMN id SET DEFAULT nextval('fleamarket.subcategory_id_seq'::regclass);
-
-
-INSERT INTO fleamarket.category (id, name, description) values
-(1,'Clothes','Clothing Apparel'),
-(2,'Jewelry and Accessories','Gems and valuables'),
-(3,	'Fine Things','Art and Collectables'),
-(4,	'Household','Household goods'),
-(5,	'Books','Good Reads'),
-(6,	'New Arrivals','Our latest products'),
-(7,	'Sale','Price discounted');
-
-
-INSERT INTO fleamarket.item_image (id, inventory_id, url) values
-(1,1,'https://media.pnca.edu/system/assets/5bf31603-1061-423b-a823-5ac478d67974/square/pnca_5bf31603-1061-423b-a823-5ac478d67974_square.jpg?1437580908'),
-(2,1,'https://media.pnca.edu/system/assets/785aa38a-aea2-4613-9d01-2b700c184166/square/pnca_785aa38a-aea2-4613-9d01-2b700c184166_square.jpg?1437581001');
-
-
-
-INSERT INTO fleamarket.inventory (id, subcategory_id, name, description, manufacturer_name, price) VALUES
-(1,1,'Mens','winter jacket','High Sierra',102.25),
-(2,1,'Texas A&M','Captivating Headgear', 'Forever Summer', 23.30),
-(3,1,'Pinehurst golf cap','adjustable back','Sweet hats',23.30),
-(4,1,'Camouflage jogger','in the cut','my winter',15.00),
-(5,2,'1969 Western','Belted Shirt Denim Dress','GAP',45.63),
-(6,	2,'Womens bracelet','Adjustable','Bello',25.21),
-(7,	2,'14k','Rose Gold Plated Designer Stud Earrings','Boutique',150.00),
-(8,	2,'Main dress',	'Long dress with feathers','Bebe',32.00),
-(9,	2,'Main dress','Long dress with feathers','Bebe',32.00),
-(10,2,'Main dress','Long dress with feathers','Bebe',32.00),
-(11,2,'Main dress','Long dress with feathers','Bebe',32.00),
-(12,2,'Main dress','Long dress with feathers','Bebe',32.00),
-(13,2,'Main dress','Long dress with feathers','Bebe',32.00),
-(14,2,'Main dress','Long dress with feathers','Bebe',32.00),
-(15,2,'Main dress','Long dress with feathers','Bebe',32.00),
-(16,2,'Main dress','Long dress with feathers','Bebe',32.00),
-(17,2,'Main dress','Long dress with feathers','Bebe',32.00),
-(18,2,'Main dress','Long dress with feathers','Bebe',32.00),
-(19,2,'Main dress','Long dress with feathers','Bebe',32.00),
-(20,2,'Main dress','Long dress with feathers','Bebe',32.00),
-(21,2,'Main dress','Long dress with feathers','Bebe',32.00),
-(22,2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(23,2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(24,2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(25,2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(26,2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(27,2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(28,2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(29,2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(30,2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(31,2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(32,2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(33,2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(34,2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(35,2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(36,2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(37,2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(38,2, 'Main dress','Long dress with feathers','Bebe',32.00);
-
-
-INSERT INTO fleamarket.subcategory (id, category_id, name, description) VALUES
-(1,1,'Sweaters and Tops',NULL),
-(2,1,'Dresses and Skirts',NULL),
-(3,1,'Coats and Jackets',NULL),
-(4,1,'Jeans and Pants',NULL),
-(5,1,'Shoes',NULL),
-(6,1,'Active Wear','Gym Apparel'),
-(7,1,'Men',NULL),
-(8,1,'Women',NULL),
-(9,1,'children',NULL),
-(10,1,'Dress Up	fun and silly clothing', NULL),
-(13,2,'Costume',NULL),
-(14,2,'Sunglasses and Scarves',NULL),
-(15,2,'Handbags and Wallets',NULL),
-(16,2,'Canes and Umbrellas',NULL),
-(17,3,'Artwork',NULL),
-(18,3,'Printings',NULL),
-(19,3,'Photographs',NULL),
-(20,3,'Pottery',NULL),
-(21,3,'Wood Block',NULL),
-(22,3,'Collectables',NULL),
-(23,4,'Kitchen',NULL),
-(24,4,'Outdoor',NULL),
-(25,4,'Toys',NULL),
-(26,5,'kids',NULL),
-(27,5,'Young Adult',NULL),
-(28,5,'Textbooks',NULL),
-(29,5,'Fiction',NULL);
+INSERT INTO fleamarket.subcategory (category_id, name, description) VALUES
+(1,'Sweaters and Tops',NULL),
+(1,'Dresses and Skirts',NULL),
+(1,'Coats and Jackets',NULL),
+(1,'Jeans and Pants',NULL),
+(1,'Shoes',NULL),
+(1,'Active Wear','Gym Apparel'),
+(1,'Men',NULL),
+(1,'Women',NULL),
+(1,'children',NULL),
+(1,'Dress Up	fun and silly clothing', NULL),
+(2,'Costume',NULL),
+(2,'Sunglasses and Scarves',NULL),
+(2,'Handbags and Wallets',NULL),
+(2,'Canes and Umbrellas',NULL),
+(3,'Artwork',NULL),
+(3,'Printings',NULL),
+(3,'Photographs',NULL),
+(3,'Pottery',NULL),
+(3,'Wood Block',NULL),
+(3,'Collectables',NULL),
+(4,'Kitchen',NULL),
+(4,'Outdoor',NULL),
+(4,'Toys',NULL),
+(5,'kids',NULL),
+(5,'Young Adult',NULL),
+(5,'Textbooks',NULL),
+(5,'Fiction',NULL);
 
 
-SELECT pg_catalog.setval('fleamarket.category_id_seq', 8, false);
+INSERT INTO fleamarket.inventory ( subcategory_id, name, description, manufacturer_name, price) VALUES
+(1,'Mens','winter jacket','High Sierra',102.25),
+(1,'Texas A&M','Captivating Headgear', 'Forever Summer', 23.30),
+(1,'Pinehurst golf cap','adjustable back','Sweet hats',23.30),
+(1,'Camouflage jogger','in the cut','my winter',15.00),
+(2,'1969 Western','Belted Shirt Denim Dress','GAP',45.63),
+(2,'Womens bracelet','Adjustable','Bello',25.21),
+(2,'14k','Rose Gold Plated Designer Stud Earrings','Boutique',150.00),
+(2,'Main dress',	'Long dress with feathers','Bebe',32.00),
+(2,'Main dress','Long dress with feathers','Bebe',32.00),
+(2,'Main dress','Long dress with feathers','Bebe',32.00),
+(2,'Main dress','Long dress with feathers','Bebe',32.00),
+(2,'Main dress','Long dress with feathers','Bebe',32.00),
+(2,'Main dress','Long dress with feathers','Bebe',32.00),
+(2,'Main dress','Long dress with feathers','Bebe',32.00),
+(2,'Main dress','Long dress with feathers','Bebe',32.00),
+(2,'Main dress','Long dress with feathers','Bebe',32.00),
+(2,'Main dress','Long dress with feathers','Bebe',32.00),
+(2,'Main dress','Long dress with feathers','Bebe',32.00),
+(2,'Main dress','Long dress with feathers','Bebe',32.00),
+(2,'Main dress','Long dress with feathers','Bebe',32.00),
+(2,'Main dress','Long dress with feathers','Bebe',32.00),
+(2, 'Main dress','Long dress with feathers','Bebe',32.00),
+(2, 'Main dress','Long dress with feathers','Bebe',32.00),
+(2, 'Main dress','Long dress with feathers','Bebe',32.00),
+(2, 'Main dress','Long dress with feathers','Bebe',32.00),
+(2, 'Main dress','Long dress with feathers','Bebe',32.00),
+(2, 'Main dress','Long dress with feathers','Bebe',32.00),
+(2, 'Main dress','Long dress with feathers','Bebe',32.00);
 
+INSERT INTO fleamarket.item_image (inventory_id, url) values
+(1,'https://media.pnca.edu/system/assets/5bf31603-1061-423b-a823-5ac478d67974/square/pnca_5bf31603-1061-423b-a823-5ac478d67974_square.jpg?1437580908'),
+(1,'https://media.pnca.edu/system/assets/785aa38a-aea2-4613-9d01-2b700c184166/square/pnca_785aa38a-aea2-4613-9d01-2b700c184166_square.jpg?1437581001');
 
-SELECT pg_catalog.setval('fleamarket.item_image_id_seq', 3, true);
-
-
-SELECT pg_catalog.setval('fleamarket.inventory_id_seq', 39, true);
-
-
-SELECT pg_catalog.setval('fleamarket.subcategory_id_seq', 30, true);
-
-
-ALTER TABLE ONLY fleamarket.category
-    ADD CONSTRAINT category_pkey PRIMARY KEY (id);
-
-
-ALTER TABLE ONLY fleamarket.item_image
-    ADD CONSTRAINT item_image_pk PRIMARY KEY (id);
-
-
-ALTER TABLE ONLY fleamarket.inventory
-    ADD CONSTRAINT inventory_pkey PRIMARY KEY (id);
-
-
-ALTER TABLE ONLY fleamarket.subcategory
-    ADD CONSTRAINT subcategory_pkey PRIMARY KEY (id);
 
 
 CREATE TRIGGER inventory_inserts AFTER INSERT ON fleamarket.inventory FOR EACH ROW EXECUTE
 FUNCTION app_private.notify_inventory_insert();
-
-
-ALTER TABLE ONLY fleamarket.inventory
-    ADD CONSTRAINT fk_inventory FOREIGN KEY (subcategory_id) REFERENCES fleamarket.subcategory(id);
-
-
-ALTER TABLE ONLY fleamarket.subcategory
-    ADD CONSTRAINT fk_subcategory FOREIGN KEY (category_id) REFERENCES fleamarket.category(id);
-
-
-
-ALTER TABLE ONLY fleamarket.item_image
-    ADD CONSTRAINT item_image_fk FOREIGN KEY (inventory_id) REFERENCES fleamarket.inventory(id) ON DELETE CASCADE;
-
-ALTER TABLE fleamarket.cart
-    ADD CONSTRAINT fk_inventory FOREIGN KEY (inventory_id) REFERENCES fleamarket.inventory(id);
 
