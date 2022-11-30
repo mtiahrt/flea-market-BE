@@ -38,6 +38,7 @@ CREATE TABLE IF NOT exists fleamarket.inventory (
     manufacturer_name character varying(100),
     price numeric(5,2),
     quantity int NULL DEFAULT 1,
+    in_stock boolean DEFAULT true,
     constraint fk_inventory_subcategory_id foreign key(subcategory_id) references fleamarket.subcategory(id)
 );
 
@@ -187,8 +188,48 @@ INSERT INTO fleamarket.item_image (inventory_id, url) values
 (1,'https://media.pnca.edu/system/assets/5bf31603-1061-423b-a823-5ac478d67974/square/pnca_5bf31603-1061-423b-a823-5ac478d67974_square.jpg?1437580908'),
 (1,'https://media.pnca.edu/system/assets/785aa38a-aea2-4613-9d01-2b700c184166/square/pnca_785aa38a-aea2-4613-9d01-2b700c184166_square.jpg?1437581001');
 
+CREATE OR REPLACE FUNCTION fleamarket.update_inventory_quantity()
+  RETURNS TRIGGER
+  LANGUAGE PLPGSQL
+  AS
+$$
+declare
+    inventory_quantity integer;
+    inStock boolean = true;
+begin
+	--get the current quantity is
+   select INTO inventory_quantity quantity from fleamarket.inventory where id = NEW.inventory_id;
+   if (inventory_quantity - new.quantity) < 1 then
+   		select into inStock false;
+   end if;
+  	update fleamarket.inventory set quantity =  inventory_quantity - NEW.quantity,
+  		in_stock = inStock
+  	where id = new.inventory_id;
+	RETURN NEW;
+END;
+$$
 
+CREATE TRIGGER update_inventory_quantity
+AFTER INSERT
+ON purchase
+FOR EACH ROW
+EXECUTE PROCEDURE fleamarket.update_inventory_quantity()
 
 CREATE TRIGGER inventory_inserts AFTER INSERT ON fleamarket.inventory FOR EACH ROW EXECUTE
 FUNCTION app_private.notify_inventory_insert();
 
+CREATE OR REPLACE FUNCTION postgraphile_watch.notify_watchers_ddl() RETURNS event_trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+  perform pg_notify(
+    'postgraphile_watch',
+    json_build_object(
+      'type',
+      'ddl',
+      'payload',
+      (select json_agg(json_build_object('schema', schema_name, 'command', command_tag)) from pg_event_trigger_ddl_commands() as x)
+    )::text
+  );
+end;
+$$;
