@@ -56,6 +56,7 @@ CREATE TABLE fleamarket.cart (
 	userId varchar(200) NOT NULL,
 	inventory_id int4 NOT NULL,
 	date_added date null default now(),
+	quantity int DEFAULT 1,
 	constraint fk_cart_inventory_id foreign key (inventory_id) references fleamarket.inventory(id)
 );
 
@@ -77,6 +78,7 @@ CREATE TABLE IF NOT exists fleamarket.name (
     user_id character varying,
     first_name character varying(100) NOT NULL,
     last_name character varying(100) NOT NULL,
+    email character varying,
     phone_number character varying(100)
 );
 
