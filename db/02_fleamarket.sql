@@ -213,7 +213,7 @@ $$
 
 CREATE TRIGGER update_inventory_quantity
 AFTER INSERT
-ON purchase
+ON fleamarket.purchase
 FOR EACH ROW
 EXECUTE PROCEDURE fleamarket.update_inventory_quantity()
 
