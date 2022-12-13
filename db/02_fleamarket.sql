@@ -53,29 +53,16 @@ CREATE TABLE IF NOT exists fleamarket.item_image (
 
 CREATE TABLE fleamarket.cart (
     id INT generated always as identity primary key,
-	userId varchar(200) NOT NULL,
+	application_user_id VARCHAR(255) NOT NULL,
 	inventory_id int4 NOT NULL,
 	date_added date null default now(),
 	quantity int DEFAULT 1,
 	constraint fk_cart_inventory_id foreign key (inventory_id) references fleamarket.inventory(id)
 );
 
-CREATE TABLE IF NOT exists fleamarket.purchase (
-    id INT generated always as identity primary key,
-    inventory_id integer,
-    product_name character varying(100) NOT NULL,
-    product_description character varying,
-    manufacturer_name character varying(100),
-    price numeric(5,2),
-    quantity int NULL DEFAULT 1,
-    purchaser_name_id integer,
-    address_id integer,
-    shipping_address_id integer
-);
-
 CREATE TABLE IF NOT exists fleamarket.name (
     id INT generated always as identity primary key,
-    user_id character varying,
+	application_user_id VARCHAR(255) NULL,
     first_name character varying(100) NOT NULL,
     last_name character varying(100) NOT NULL,
     email character varying,
@@ -114,8 +101,24 @@ CREATE TABLE IF NOT exists fleamarket.purchase (
     constraint fk_purchase_name_id foreign key (name_id) references fleamarket.name(id),
     constraint fk_purchase_shipping_address_id foreign key (shipping_address_id)  references fleamarket.address(id),
     constraint fk_purchase_billing_address_id foreign key (billing_address_id)  references fleamarket.address(id)
-
 );
+
+CREATE TABLE IF NOT exists fleamarket.role (
+    id INT generated always as identity primary key,
+    user_id INT,
+    name character varying(100) NOT null,
+    constraint fk_role_user_id foreign key (user_id) references fleamarket.name(id)
+);
+
+INSERT into fleamarket.name
+(application_user_id, first_name, last_name, email)
+values 
+('yi0ZyXuTp8dZ0NQPx0HTqZjNFF02', 'Mark', 'Tiahrt', 'marktpua@hotmail.com');
+
+INSERT into fleamarket.role 
+(user_id, name)
+values
+(1, 'admin');
 
 INSERT INTO fleamarket.category (name, description) values
 ('Clothes','Clothing Apparel'),
