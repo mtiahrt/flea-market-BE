@@ -12,7 +12,7 @@ note: you will also need something to interact with postgres.  I recommend [DBea
 
 Second, build your postgres db with the scripts provide in this repo inside the `db` folder.  Create a .env file at the root of the project.  copy the example env file to the .env file.  add your passwords.  
 
-
+### Node version in use 16.15.1
 
 ## Add SSL certs
 SSL certs are need because for the auth with Facebook, Google, Twitter.
