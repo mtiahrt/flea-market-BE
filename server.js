@@ -21,7 +21,6 @@ try {
         }));
     }
 
-
     const admin = require("firebase-admin");
     admin.initializeApp({
         credential: admin.credential.cert({
@@ -55,14 +54,20 @@ try {
         })
     );
 
-    //TODO lock down this end point with Auth...
     app.get('/secureImageURL', async (req, res) => {
+        const isTokenValidResult = isAccessTokenValid(req, res);
+        if(isTokenValidResult.name === "JsonWebTokenError"){
+            return res.status(401).send(isTokenValidResult);
+        }
         const url = await generateUploadImageURL();
         res.send({url})
     });
 
-    //TODO lock down this end point with Auth...
     app.get('/secureImageDeleteURL', async (req, res) => {
+        const isTokenValidResult = isAccessTokenValid(req, res);
+        if(isTokenValidResult.name === "JsonWebTokenError"){
+            return res.status(401).send(isTokenValidResult);
+        }
         const publicID = req.query.publicId
         const url = await generateDeleteImageURL(publicID);
         res.send({url})
@@ -87,23 +92,23 @@ try {
             })
     });
 
-    app.get("/user/validateAccessToken", (req, res) => {
+    const isAccessTokenValid = (req, res) => {
         let tokenHeaderKey = process.env.TOKEN_HEADER_KEY;
         let jwtSecretKey = process.env.JWT_SECRET_KEY;
         try {
             const token = req.header(tokenHeaderKey);
             const verified = jwt.verify(token, jwtSecretKey);
             if(verified){
-                return res.send("Successfully Verified");
+                return true
             }else{
                 // Access Denied
-                return res.status(401).send(error);
+                return error
             }
         } catch (error) {
             // Access Denied
-            return res.status(401).send(error);
+            return error
         }
-    });
+    }
 
 //use https for development so all browsers work for testing
     if (process.env.DEVELOPMENT) {
