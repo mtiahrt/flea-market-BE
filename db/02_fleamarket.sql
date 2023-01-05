@@ -159,35 +159,17 @@ INSERT INTO fleamarket.subcategory (category_id, name, description) VALUES
 (5,'Fiction',NULL);
 
 
-INSERT INTO fleamarket.inventory ( subcategory_id, name, description, manufacturer_name, price) VALUES
-(1,'Mens','winter jacket','High Sierra',102.25),
-(1,'Texas A&M','Captivating Headgear', 'Forever Summer', 23.30),
-(1,'Pinehurst golf cap','adjustable back','Sweet hats',23.30),
-(1,'Camouflage jogger','in the cut','my winter',15.00),
-(2,'1969 Western','Belted Shirt Denim Dress','GAP',45.63),
-(2,'Womens bracelet','Adjustable','Bello',25.21),
-(2,'14k','Rose Gold Plated Designer Stud Earrings','Boutique',150.00),
-(2,'Main dress',	'Long dress with feathers','Bebe',32.00),
-(2,'Main dress','Long dress with feathers','Bebe',32.00),
-(2,'Main dress','Long dress with feathers','Bebe',32.00),
-(2,'Main dress','Long dress with feathers','Bebe',32.00),
-(2,'Main dress','Long dress with feathers','Bebe',32.00),
-(2,'Main dress','Long dress with feathers','Bebe',32.00),
-(2,'Main dress','Long dress with feathers','Bebe',32.00),
-(2,'Main dress','Long dress with feathers','Bebe',32.00),
-(2,'Main dress','Long dress with feathers','Bebe',32.00),
-(2,'Main dress','Long dress with feathers','Bebe',32.00),
-(2,'Main dress','Long dress with feathers','Bebe',32.00),
-(2,'Main dress','Long dress with feathers','Bebe',32.00),
-(2,'Main dress','Long dress with feathers','Bebe',32.00),
-(2,'Main dress','Long dress with feathers','Bebe',32.00),
-(2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(2, 'Main dress','Long dress with feathers','Bebe',32.00),
-(2, 'Main dress','Long dress with feathers','Bebe',32.00);
+INSERT INTO fleamarket.inventory ( subcategory_id, name, description, manufacturer_name, price, quantity) VALUES
+(1,'Mens','winter jacket','High Sierra',102.25,2),
+(1,'Texas A&M','Captivating Headgear', 'Forever Summer', 23.30,1),
+(1,'Pinehurst golf cap','adjustable back','Sweet hats',23.30,5),
+(1,'Camouflage jogger','in the cut','my winter',15.00,8),
+(2,'1969 Western','Belted Shirt Denim Dress','GAP',45.63,3),
+(2,'Womens bracelet','Adjustable','Bello',25.21,9),
+(2,'14k','Rose Gold Plated Designer Stud Earrings','Boutique',150.00,100),
+(2,'Main dress',	'Long dress with feathers','Bebe',32.00,40),
+(2,'Main dress','Long dress with feathers','Bebe',32.00, 11),
+(2,'Main dress','Long dress with feathers','Bebe',32.00, 9);
 
 INSERT INTO fleamarket.item_image (inventory_id, url) values
 (1,'https://media.pnca.edu/system/assets/5bf31603-1061-423b-a823-5ac478d67974/square/pnca_5bf31603-1061-423b-a823-5ac478d67974_square.jpg?1437580908'),
