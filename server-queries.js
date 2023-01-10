@@ -18,6 +18,18 @@ async function getUserRoles(userId){
     await pool.end();
     return data.rows.map(x => x.name)
 }
+
+async function getProducts(cartItems){
+    const pool = new Pool(credentials);
+    const cartIds = cartItems.map(x => x.cartId).toString()
+    const data = await pool.query(
+        `SELECT c.id, c.quantity, i.id, i.price, i.name 
+                        FROM fleamarket.cart c, fleamarket.inventory i 
+                        WHERE c.inventory_id = i.id 
+                        AND c.id in (${cartIds})`);
+    await pool.end();
+    return data.rows.map(x => ({name: x.name, price: x.price, quantity: x.quantity}))
+}
 module.exports = {
-    getUserRoles
+    getUserRoles, getProducts
 }

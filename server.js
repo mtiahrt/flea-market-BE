@@ -1,3 +1,4 @@
+require("dotenv").config();
 const pg = require("pg");
 const fs = require('fs');
 const cors = require('cors');
@@ -8,13 +9,13 @@ const {default: PgPubsub} = require("@graphile/pg-pubsub");
 const PgSimplifyInflectorPlugin = require("@graphile-contrib/pg-simplify-inflector");
 const {generateUploadImageURL, generateDeleteImageURL} = require("./s3Images");
 const jwt = require('jsonwebtoken');
-const {getUserRoles} = require("./server-queries");
+const {getUserRoles, getProducts} = require("./server-queries");
 const {getAuth} = require("firebase-admin/auth");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 try {
     const app = express();
-    require("dotenv").config();
-
+    app.use(express.json());
     if (process.env.DEVELOPMENT) {//dev only
         app.use(cors({
             origin: 'https://localhost:3000'
@@ -91,6 +92,77 @@ try {
                 res.send(token);
             })
     });
+
+    app.post('/create-checkout-session', async (req, res) => {
+        function convertDollarsToCents(value) {
+            value = (value + '').replace(/[^\d.-]/g, '');
+            if (value && value.includes('.')) {
+                value = value.substring(0, value.indexOf('.') + 3);
+            }
+
+            return value ? Math.round(parseFloat(value) * 100) : 0;
+        }
+
+        try { //check if the token is valid
+                const isTokenValidResult = isAccessTokenValid(req, res);
+                if(isTokenValidResult.name === "JsonWebTokenError"){
+                        return res.status(401).send(isTokenValidResult);
+                }
+                //get item name and description
+                const cartItems = await getProducts(req.body);
+            const session = await stripe.checkout.sessions.create({
+                    payment_method_types: ["card"],
+                    mode: "payment",
+                    line_items: cartItems.map(item => {
+                        return {
+                            price_data: {
+                                currency: "usd",
+                                product_data: {
+                                    name: item.name,
+                                },
+                                unit_amount: convertDollarsToCents(item.price),
+                            },
+                            quantity: item.quantity,
+                        }
+                    }),
+                    success_url: `${process.env.CHECK_OUT_RESULT_CLIENT_URL}/success.html`,
+                    cancel_url: `${process.env.CHECK_OUT_RESULT_CLIENT_URL}/cancel.html`,
+                })
+                res.json({ url: session.url })
+            }
+            catch (e){
+                res.status(500).json({ error: e.message })
+        }
+    })
+
+    // app.post("/create-payment-intent", async (req, res) => {
+    //     try {
+    //         //check if the token is valid
+    //         const isTokenValidResult = isAccessTokenValid(req, res);
+    //         if(isTokenValidResult.name === "JsonWebTokenError"){
+    //             return res.status(401).send(isTokenValidResult);
+    //         }
+    //         //check that the order amount is correct
+    //
+    //         const { items } = req.body;
+    //         // Create a PaymentIntent with the order amount and currency
+    //         const paymentIntent = await stripe.paymentIntents.create({
+    //             amount: 100.00,
+    //             //todo: write method to shared between front and backend to cal total amount
+    //             // amount: calculateOrderAmount(items),
+    //             currency: "usd",
+    //             automatic_payment_methods: {
+    //                 enabled: true,
+    //             },
+    //         });
+    //
+    //         res.send({
+    //             clientSecret: paymentIntent.client_secret,
+    //         });
+    //     }catch (error){
+    //         res.send(error)
+    //     }
+    // })
 
     const isAccessTokenValid = (req, res) => {
         let tokenHeaderKey = process.env.TOKEN_HEADER_KEY;
