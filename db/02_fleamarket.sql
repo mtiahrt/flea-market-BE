@@ -30,6 +30,12 @@ CREATE TABLE IF NOT exists fleamarket.subcategory (
     constraint fk_subcategory_category_id foreign key(category_id) references fleamarket.category(id)
 );
 
+CREATE TABLE IF NOT exists fleamarket.shipping_cost (
+    id INT generated always as identity primary key,
+    name character varying(100) NOT NULL,
+    price numeric(5,2)
+);
+
 CREATE TABLE IF NOT exists fleamarket.inventory (
     id INT generated always as identity primary key,
     subcategory_id integer,
@@ -174,6 +180,13 @@ INSERT INTO fleamarket.inventory ( subcategory_id, name, description, manufactur
 INSERT INTO fleamarket.item_image (inventory_id, url) values
 (1,'https://media.pnca.edu/system/assets/5bf31603-1061-423b-a823-5ac478d67974/square/pnca_5bf31603-1061-423b-a823-5ac478d67974_square.jpg?1437580908'),
 (1,'https://media.pnca.edu/system/assets/785aa38a-aea2-4613-9d01-2b700c184166/square/pnca_785aa38a-aea2-4613-9d01-2b700c184166_square.jpg?1437581001');
+
+INSERT INTO fleamarket.shipping_cost ("name", price) values
+('UPS Ground', 14.95),
+('FedEx Ground', 17.95),
+('UPS Same Day Air', 34.95),
+('FexEX Air Ground', 44.95)
+
 
 CREATE OR REPLACE FUNCTION fleamarket.update_inventory_quantity()
   RETURNS TRIGGER
