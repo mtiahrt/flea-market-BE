@@ -126,7 +126,7 @@ INSERT into fleamarket.role
 values
 (1, 'admin');
 
-INSERT INTO fleamarket.category (name, description) values
+INSERT INTO fleamarket.category (name, description) VALUES
 ('Clothes','Clothing Apparel'),
 ('Jewelry and Accessories','Gems and valuables'),
 ('Fine Things','Art and Collectables'),
@@ -134,6 +134,11 @@ INSERT INTO fleamarket.category (name, description) values
 ('Books','Good Reads'),
 ('New Arrivals','Our latest products'),
 ('Sale','Price discounted');
+
+INSERT INTO fleamarket.shipping_cost (name, price) VALUES
+('FexEx Ground', 20.44),
+('UPS Ground', 15.30),
+('UPS Same day air', 45.25);
 
 INSERT INTO fleamarket.subcategory (category_id, name, description) VALUES
 (1,'Sweaters and Tops',NULL),

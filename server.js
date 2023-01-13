@@ -135,35 +135,6 @@ try {
         }
     })
 
-    // app.post("/create-payment-intent", async (req, res) => {
-    //     try {
-    //         //check if the token is valid
-    //         const isTokenValidResult = isAccessTokenValid(req, res);
-    //         if(isTokenValidResult.name === "JsonWebTokenError"){
-    //             return res.status(401).send(isTokenValidResult);
-    //         }
-    //         //check that the order amount is correct
-    //
-    //         const { items } = req.body;
-    //         // Create a PaymentIntent with the order amount and currency
-    //         const paymentIntent = await stripe.paymentIntents.create({
-    //             amount: 100.00,
-    //             //todo: write method to shared between front and backend to cal total amount
-    //             // amount: calculateOrderAmount(items),
-    //             currency: "usd",
-    //             automatic_payment_methods: {
-    //                 enabled: true,
-    //             },
-    //         });
-    //
-    //         res.send({
-    //             clientSecret: paymentIntent.client_secret,
-    //         });
-    //     }catch (error){
-    //         res.send(error)
-    //     }
-    // })
-
     const isAccessTokenValid = (req, res) => {
         let tokenHeaderKey = process.env.TOKEN_HEADER_KEY;
         let jwtSecretKey = process.env.JWT_SECRET_KEY;
