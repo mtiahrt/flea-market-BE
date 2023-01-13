@@ -19,14 +19,19 @@ async function getUserRoles(userId){
     return data.rows.map(x => x.name)
 }
 
-async function getProducts(cartItems){
+async function getProducts(items){
     const pool = new Pool(credentials);
-    const cartIds = cartItems.map(x => x.cartId).toString()
+    const cartIds = items.filter(x => x.inventoryItem === true).map(x => x.cartId).toString();
+    const shippingId = items.filter(x=> x.inventoryItem === false).map(x => x.shippingId).toString();
     const data = await pool.query(
-        `SELECT c.id, c.quantity, i.id, i.price, i.name 
+        `SELECT id, 1 quantity, id, price, name 
+                        FROM fleamarket.shipping_cost sc 
+                        WHERE id = ${shippingId}
+                        UNION ALL
+                        SELECT c.id, c.quantity, i.id, i.price, i.name 
                         FROM fleamarket.cart c, fleamarket.inventory i 
                         WHERE c.inventory_id = i.id 
-                        AND c.id in (${cartIds})`);
+                        AND c.id in (${cartIds})`)
     await pool.end();
     return data.rows.map(x => ({name: x.name, price: x.price, quantity: x.quantity}))
 }
