@@ -16,11 +16,25 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 try {
     const app = express();
     app.use(express.json());
+
     if (process.env.DEVELOPMENT) {//dev only
         app.use(cors({
             origin: 'https://localhost:3000'
         }));
     }
+
+    app.use((req, res, next) => {
+        if(req.originalUrl === "/user/generateAccessToken"){
+            next();
+            return
+        }
+        const tokenValid = isAccessTokenValid(req, res);
+        if(tokenValid !== true){
+            return res.status(401).send(tokenValid);
+        }
+        next()
+    })
+
 
     const admin = require("firebase-admin");
     admin.initializeApp({
@@ -171,3 +185,6 @@ try {
 } catch (error) {
     console.log(error);
 }
+
+
+'eyJhbGciOiJSUzI1NiIsImtpZCI6IjVhNTA5ZjAxOWY3MGQ3NzlkODBmMTUyZDFhNWQzMzgxMWFiN2NlZjciLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiZmlkZGxlciAyMDAxIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FMbTV3dTE5Zlh1cFFMazBhajBvMEpjWGpNa2Z2czlHVWR0dmcyQUo2STFBcGZJPXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2ZsZWEtbWFya2V0LTExYWQ0IiwiYXVkIjoiZmxlYS1tYXJrZXQtMTFhZDQiLCJhdXRoX3RpbWUiOjE2…'
