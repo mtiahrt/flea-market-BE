@@ -35,7 +35,6 @@ try {
         next()
     })
 
-
     const admin = require("firebase-admin");
     admin.initializeApp({
         credential: admin.credential.cert({
@@ -70,19 +69,11 @@ try {
     );
 
     app.get('/secureImageURL', async (req, res) => {
-        const isTokenValidResult = isAccessTokenValid(req, res);
-        if(isTokenValidResult.name === "JsonWebTokenError"){
-            return res.status(401).send(isTokenValidResult);
-        }
         const url = await generateUploadImageURL();
         res.send({url})
     });
 
     app.get('/secureImageDeleteURL', async (req, res) => {
-        const isTokenValidResult = isAccessTokenValid(req, res);
-        if(isTokenValidResult.name === "JsonWebTokenError"){
-            return res.status(401).send(isTokenValidResult);
-        }
         const publicID = req.query.publicId
         const url = await generateDeleteImageURL(publicID);
         res.send({url})
@@ -117,11 +108,7 @@ try {
             return value ? Math.round(parseFloat(value) * 100) : 0;
         }
 
-        try { //check if the token is valid
-                const isTokenValidResult = isAccessTokenValid(req, res);
-                if(isTokenValidResult.name === "JsonWebTokenError"){
-                        return res.status(401).send(isTokenValidResult);
-                }
+        try {
                 //get item name and description
                 const cartItems = await getProducts(req.body);
             const session = await stripe.checkout.sessions.create({
@@ -185,6 +172,3 @@ try {
 } catch (error) {
     console.log(error);
 }
-
-
-'eyJhbGciOiJSUzI1NiIsImtpZCI6IjVhNTA5ZjAxOWY3MGQ3NzlkODBmMTUyZDFhNWQzMzgxMWFiN2NlZjciLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiZmlkZGxlciAyMDAxIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FMbTV3dTE5Zlh1cFFMazBhajBvMEpjWGpNa2Z2czlHVWR0dmcyQUo2STFBcGZJPXM5Ni1jIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2ZsZWEtbWFya2V0LTExYWQ0IiwiYXVkIjoiZmxlYS1tYXJrZXQtMTFhZDQiLCJhdXRoX3RpbWUiOjE2…'
