@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({path: `${process.env.ENV_FILE}`});
 const pg = require("pg");
 const fs = require('fs');
 const cors = require('cors');
