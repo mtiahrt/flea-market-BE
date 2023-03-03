@@ -10,9 +10,10 @@ https://postgresapp.com/downloads.html
 
 note: you will also need something to interact with postgres.  I recommend [DBeaver](https://dbeaver.io/download/)
 
-Second, build your postgres db with the scripts provide in this repo inside the `db` folder.  Create a .env file at the root of the project.  copy the example env file to the .env file.  add your passwords.  
+Second, build your postgres db with the scripts provide in this repo inside the `db` folder.
 
 ### Node version in use 16.15.1
+install node version 16.15.1
 
 ## Add SSL certs
 SSL certs are need because for the auth with Facebook, Google, Twitter.
@@ -68,25 +69,24 @@ In keychain access
 2. double-click on the local host cert
 3. expand the `Trust` option
 4. Select "When using this certificate: Always Trust"
-    - This should set all the drop downs items to "Always Trust"
+    - This should set all the dropdowns items to "Always Trust"
 5. save and close
 6. close and restart chrome.
 
-install yarn to run the app
-`npm install --global yarn`
-`yarn` to install deps
-`yarn start` to run the app
+### .env set up
+This project is running on 2 environments.  This requires 2 different .env files to be added to the project root ```.env.development``` and ```.env.production```.  Create those files and copy the contents of ```.env.example``` to both to jump start this setup.
 
+### Install app
+once node is installed you will need to install the application dependencies in order to run the app.
+`npm install`.  Once the installation is complete and the sensitive data is added to the env files you can run the app.
+`npm start-dev` to run on development `npm start-prod` to run on production aka the linux machine.  api URL will be https://localhost:8080/graphql.
+This is the endpoint that frontend application is using. 
 
-api use https://localhost:8080/graphql
-
-api testing and docs use: https://localhost:8080/graphiql
-
+api testing and view the docs use: https://localhost:8080/graphiql
 
 ### Setting up Image bucket on AWS
 The aws keys ```AWS_IMAGES_ACCESS_KEY_ID``` and ```AWS_IMAGES_SECRET_ACCESS_KEY``` are generated on aws.  These keys are created
 by making a IAM user and a AWS S3 bucket.  I followed this video to set this up.  [Upload Images Directly to S3 from Front End](https://www.youtube.com/watch?v=yGYeYJpRWPM&list=LL&index=1&t=2s&ab_channel=SamMeech-Ward)
-
 
 # Docker
 ## Docker set up isn't complete yet.  
@@ -99,5 +99,3 @@ to run the image<br>
 To run the node and db service in a docker compose network at the root of the project run<br>
 ```docker-compose up```
 
-## Update on Docker Networking ### 
-Networking should be working now when running container locally. 

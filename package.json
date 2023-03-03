@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "backend service for the flea market app",
   "scripts": {
-    "start": "ENV_FILE=.env.development node server.js",
+    "start-dev": "ENV_FILE=.env.development node server.js",
     "start-prod": "ENV_FILE=.env.production node server.js"
   },
   "author": "Mark Tiahrt",
