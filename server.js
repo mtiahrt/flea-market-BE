@@ -3,7 +3,7 @@ const pg = require("pg");
 const fs = require('fs');
 const cors = require('cors');
 const express = require("express");
-const https = require('https');
+// const https = require('https');
 const {postgraphile, makePluginHook} = require("postgraphile");
 const {default: PgPubsub} = require("@graphile/pg-pubsub");
 const PgSimplifyInflectorPlugin = require("@graphile-contrib/pg-simplify-inflector");
@@ -158,20 +158,21 @@ try {
     }
 
 //use https for development so all browsers work for testing
-    if (process.env.DEVELOPMENT) {
-        https.createServer({
-            key: fs.readFileSync('server.key'),
-            cert: fs.readFileSync('server.cert')
-        }, app).listen(process.env.PORT, function () {
-            console.log(`🚀 Development Server is Ready listening on port ${process.env.PORT}! Go to https://localhost:${process.env.PORT}/graphiql`)
-        });
-    } else {
+//     if (process.env.DEVELOPMENT === 'true') {
+//         console.log('in development', process.env.DEVELOPMENT);
+//         https.createServer({
+//             key: fs.readFileSync('server.key'),
+//             cert: fs.readFileSync('server.cert')
+//         }, app).listen(process.env.PORT, function () {
+//             console.log(`🚀 Development Server is Ready listening on port ${process.env.PORT}! Go to https://localhost:${process.env.PORT}/graphiql`)
+//         });
+//     } else {
         //for prod server https is already done by heroku
         app.listen(process.env.PORT);
         console.log(
             `🚀 Prod Server ready browser url localhost:${process.env.PORT}/graphiql`
         );
-    }
+    // }
 } catch (error) {
     console.log(error);
 }
