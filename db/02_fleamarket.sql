@@ -218,4 +218,15 @@ CREATE TRIGGER update_inventory_quantity
 AFTER INSERT
 ON fleamarket.purchase
 FOR EACH ROW
-EXECUTE PROCEDURE fleamarket.update_inventory_quantity()
+EXECUTE PROCEDURE fleamarket.update_inventory_quantity();
+
+CREATE USER fleamarketShopper WITH PASSWORD '---Your password---';
+GRANT CONNECT ON DATABASE postgres TO fleamarketShopper;
+GRANT USAGE ON SCHEMA fleamarket TO fleamarketShopper;
+grant pg_read_all_data to fleamarketShopper;
+
+CREATE USER fleamarketAdmin WITH PASSWORD '---Your password----';
+GRANT CONNECT ON DATABASE postgres TO fleamarketAdmin;
+GRANT USAGE ON SCHEMA fleamarket TO fleamarketAdmin;
+grant pg_read_all_data to fleamarketAdmin;
+grant pg_write_all_data to fleamarketAdmin;
