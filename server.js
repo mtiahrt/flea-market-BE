@@ -16,14 +16,13 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 try {
     const app = express();
     app.use(express.json());
+    const allowedOrigin = process.env.DEVELOPMENT ==='true' ? 'https://localhost:3000' : 'https://shopwildheather.com/';
 
-    if (process.env.DEVELOPMENT) {//dev only
-        app.use(cors({
-            origin: 'https://localhost:3000'
-        }));
-    }
+    app.use(cors({
+        origin: allowedOrigin
+    }));
 
-    if(!process.env.DEVELOPMENT){
+    if(!process.env.DEVELOPMENT === 'false'){
         app.use((req, res, next) => {
             if(req.originalUrl === "/user/generateAccessToken"){
                 next();
@@ -158,7 +157,7 @@ try {
     }
 
 //use https for development so all browsers work for testing
-    if (process.env.DEVELOPMENT) {
+    if (process.env.DEVELOPMENT === 'true') {
         https.createServer({
             key: fs.readFileSync('server.key'),
             cert: fs.readFileSync('server.cert')
@@ -169,7 +168,7 @@ try {
         //for prod server https is already done by heroku
         app.listen(process.env.PORT);
         console.log(
-            `🚀 Prod Server ready browser url localhost:${process.env.PORT}/graphiql`
+            `🚀 Server ready browser url ${process.env.DEVELOPMENT === 'true' ? 'localhost':'http://ec2-3-90-201-116.compute-1.amazonaws.com:'}:${process.env.PORT}/graphiql`
         );
     }
 } catch (error) {
