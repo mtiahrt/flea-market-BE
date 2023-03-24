@@ -6,8 +6,10 @@ https://github.com/derekjwilliams/covid-19-graphql/blob/master/pg_hba.example.co
 
 https://github.com/derekjwilliams/covid-19-graphql/blob/master/postgresql.example.conf
 
-The changes I made were the following:<br>
-pg_hba.conf line 12:<br>
-```host all             all 192.168.1.12/16 trust # Allowing docker container connections to host db```<br>
-postgresql.conf line 58:<br>
-```listen_addresses='*' #only for dev, narrow this for production```
+The changes I made were the following:
+pg_hba.conf line 12:
+```
+# TYPE  DATABASE        USER            	ADDRESS                 METHOD
+host    all             postgres                localhost               scram-sha-256
+host 	all 		fleamarketadmin 	 11.22.333.444/0 	  scram-sha-256
+```
