@@ -16,7 +16,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 try {
     const app = express();
     app.use(express.json());
-    const allowedOrigin = process.env.DEVELOPMENT ==='true' ? 'https://localhost:3000' : 'https://shopwildheather.com/';
+    const allowedOrigin = process.env.DEVELOPMENT ==='true' ? 'https://localhost:3000' : 'https://shopwildheather.com';
 
     app.use(cors({
         origin: allowedOrigin
@@ -46,6 +46,9 @@ try {
         })
     })
     const pluginHook = makePluginHook([PgPubsub]);
+    // const databaseURL = 'postgresql://postgres:vIzset-tytpic-tejpa1@db.hvzadxezakdssbkhentz.supabase.co:5432/postgres'
+    // const databaseURL = 'postgresql://fleamarketadmin:7S6D*w9j8XBT1m@db.hvzadxezakdssbkhentz.supabase.co:5432/postgres'
+
     const databaseURL = `postgres://${process.env.POSTGRES_USER}:` +
         `${process.env.POSTGRES_PASSWORD}@` +
         `${process.env.POSTGRES_HOST}:` +
