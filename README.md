@@ -88,14 +88,8 @@ api testing and view the docs use: https://localhost:8080/graphiql
 The aws keys ```AWS_IMAGES_ACCESS_KEY_ID``` and ```AWS_IMAGES_SECRET_ACCESS_KEY``` are generated on aws.  These keys are created
 by making a IAM user and an AWS S3 bucket.  I followed this video to set this up.  [Upload Images Directly to S3 from Front End](https://www.youtube.com/watch?v=yGYeYJpRWPM&list=LL&index=1&t=2s&ab_channel=SamMeech-Ward)
 
-# Docker
-## Docker set up isn't complete yet.  
-to build the image run this command in the root of the project<br>
-```docker build . -t postgraphile_api```
-
-to run the image<br>
-```docker run -p 8080:8080 -d postgraphile_api```
-## Docker Compose
-To run the node and db service in a docker compose network at the root of the project run<br>
-```docker-compose up```
-
+### Deployment
+The production server is running on Heroku(basic plan).  It is deployed by committing the code changes to the 
+Heroku git Repo.  URLs
+`https://git.heroku.com/flea-market-be.git (fetch)`
+`https://git.heroku.com/flea-market-be.git (push)`
