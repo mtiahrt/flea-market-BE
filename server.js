@@ -12,6 +12,8 @@ const jwt = require('jsonwebtoken');
 const {getUserRoles, getProducts} = require("./server-queries");
 const {getAuth} = require("firebase-admin/auth");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const limiter = require('./middleware/rate-limiter')
+
 
 try {
     const app = express();
@@ -22,6 +24,7 @@ try {
         origin: allowedOrigin
     }));
 
+    app.use(limiter);
     if(!process.env.DEVELOPMENT === 'false'){
         app.use((req, res, next) => {
             if(req.originalUrl === "/user/generateAccessToken"){
