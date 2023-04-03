@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const tokenValidator = (app)=> {
-    if (process.env.DEVELOPMENT === 'false') {
+    // if (process.env.DEVELOPMENT === 'false') {
         app.use((req, res, next) => {
             if (req.originalUrl === "/user/generateAccessToken") {
                 next();
@@ -13,7 +13,7 @@ const tokenValidator = (app)=> {
             }
             next()
         })
-    }
+    // }
 }
 const isAccessTokenValid = (req, res) => {
     let tokenHeaderKey = process.env.TOKEN_HEADER_KEY;
