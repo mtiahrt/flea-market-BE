@@ -2,17 +2,17 @@ const jwt = require("jsonwebtoken");
 
 const tokenValidator = (app)=> {
     // if (process.env.DEVELOPMENT === 'false') {
-        app.use((req, res, next) => {
-            if (req.originalUrl === "/user/generateAccessToken") {
-                next();
-                return
-            }
-            const tokenValid = isAccessTokenValid(req, res);
-            if (tokenValid !== true) {
-                return res.status(401).send(tokenValid);
-            }
-            next()
-        })
+    //     app.use((req, res, next) => {
+    //         if (req.originalUrl === "/user/generateAccessToken") {
+    //             next();
+    //             return
+    //         }
+    //         const tokenValid = isAccessTokenValid(req, res);
+    //         if (tokenValid !== true) {
+    //             return res.status(401).send(tokenValid);
+    //         }
+    //         next()
+    //     })
     // }
 }
 const isAccessTokenValid = (req, res) => {
