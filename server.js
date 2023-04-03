@@ -1,30 +1,23 @@
 require("dotenv").config({path: `${process.env.ENV_FILE}`});
-const pg = require("pg");
 const fs = require('fs');
-const cors = require('cors');
 const express = require("express");
 const https = require('https');
-const {postgraphile, makePluginHook} = require("postgraphile");
-const {default: PgPubsub} = require("@graphile/pg-pubsub");
-const PgSimplifyInflectorPlugin = require("@graphile-contrib/pg-simplify-inflector");
 const {generateUploadImageURL, generateDeleteImageURL} = require("./s3Images");
 const jwt = require('jsonwebtoken');
 const {getUserRoles, getProducts} = require("./server-queries");
 const {getAuth} = require("firebase-admin/auth");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const limiter = require('./middleware/rate-limiter')
-
+const limiter = require('./middleware/rate-limiter');
+const myCors = require('./middleware/cors');
+const myPostgraphile = require('./middleware/postgraphile');
 
 try {
     const app = express();
     app.use(express.json());
-    const allowedOrigin = process.env.DEVELOPMENT ==='true' ? 'https://localhost:3000' : 'https://shopwildheather.com';
-
-    app.use(cors({
-        origin: allowedOrigin
-    }));
-
+    app.use(myCors);
     app.use(limiter);
+    app.use(myPostgraphile)
+
     if(!process.env.DEVELOPMENT === 'false'){
         app.use((req, res, next) => {
             if(req.originalUrl === "/user/generateAccessToken"){
@@ -39,7 +32,6 @@ try {
         })
     }
 
-
     const admin = require("firebase-admin");
     admin.initializeApp({
         credential: admin.credential.cert({
@@ -48,33 +40,6 @@ try {
             privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g,'\n'),
         })
     })
-    const pluginHook = makePluginHook([PgPubsub]);
-    // const databaseURL = 'postgresql://postgres:vIzset-tytpic-tejpa1@db.hvzadxezakdssbkhentz.supabase.co:5432/postgres'
-    // const databaseURL = 'postgresql://fleamarketadmin:7S6D*w9j8XBT1m@db.hvzadxezakdssbkhentz.supabase.co:5432/postgres'
-
-    const databaseURL = `postgres://${process.env.POSTGRES_USER}:` +
-        `${process.env.POSTGRES_PASSWORD}@` +
-        `${process.env.POSTGRES_HOST}:` +
-        `${process.env.POSTGRES_PORT}/` +
-        `${process.env.POSTGRES_DB}`;
-    const pgPool = new pg.Pool({
-        connectionString: databaseURL,
-    });
-
-    app.use(
-        postgraphile(pgPool, process.env.POSTGRES_SCHEMA, {
-            appendPlugins: [PgSimplifyInflectorPlugin],
-            pluginHook,
-            retryOnInitFail: true,
-            enableCors: true,
-            simpleCollections: "only",
-            subscriptions: true,
-            watchPg: true,
-            simpleSubscriptions: true,
-            graphiql: true,
-            enhanceGraphiql: true,
-        })
-    );
 
     app.get('/secureImageURL', async (req, res) => {
         const url = await generateUploadImageURL();
