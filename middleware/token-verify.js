@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const tokenValidator = (app)=> {
-    if (!process.env.DEVELOPMENT === 'false') {
+    if (process.env.DEVELOPMENT === 'false') {
         app.use((req, res, next) => {
             if (req.originalUrl === "/user/generateAccessToken") {
                 next();
