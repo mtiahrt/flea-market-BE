@@ -36,7 +36,7 @@ try {
         //for prod server https is already done by heroku
         app.listen(process.env.PORT);
         console.log(
-            `🚀 Production server ready browser url http://localhost:${process.env.PORT}/graphiql`
+            `🚀 Production server ready browser url https://flea-market-be.herokuapp.com/graphiql`
         );
     }
 } catch (error) {
