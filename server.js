@@ -10,7 +10,7 @@ const tokenValidator = require('./middleware/token-verify');
 try {
     const app = express();
     app.use(express.json());
-    app.use(myCors);
+    // app.use(myCors);
     app.use(limiter);
     tokenValidator(app);
     app.use(myPostgraphile);
