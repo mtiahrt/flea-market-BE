@@ -12,8 +12,8 @@ note: you will also need something to interact with postgres.  I recommend [DBea
 
 Second, build your postgres db with the scripts provide in this repo inside the `db` folder.
 
-### Node version in use 16.15.1
-install node version 16.15.1
+### Node version in use 18.15.0
+### npm version in use 9.5.0
 
 ## Add SSL certs
 SSL certs are need because for the auth with Facebook, Google, Twitter.
