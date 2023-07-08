@@ -5,7 +5,12 @@ const tokenValidator = (app)=> {
         app.use((req, res, next) => {
             if (req.originalUrl === "/user/generateAccessToken") {
                 next();
-                return
+                return;
+            }
+            //allow users to see inventory without signing in
+            if (req.method === 'POST' && req.body.operationName === 'publicInventory') {
+                next();
+                return;
             }
             const tokenValid = isAccessTokenValid(req, res);
             if (tokenValid !== true) {
