@@ -8,7 +8,7 @@ const tokenValidator = (app)=> {
                 return;
             }
             //allow users to see inventory without signing in
-            if (req.method === 'POST' && req.body.operationName === 'publicInventory') {
+            if (req.method === 'POST' && req.body.operationName.includes('public')) {
                 next();
                 return;
             }
