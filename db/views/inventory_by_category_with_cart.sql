@@ -2,28 +2,28 @@
 
 CREATE OR REPLACE VIEW fleamarket.inventory_by_category_with_cart
 AS
-select  i.id inventoryId,
-    i.name inventoryName,
+SELECT i.id AS inventoryid,
+    i.name AS inventoryname,
     i.description,
-    i.quantity inventoryQuantity,
+    i.quantity AS inventoryquantity,
     i.manufacturer_name,
     i.price,
-    c.id cartId,
-    c.quantity cartQuantity,
+    c.id AS cartid,
+    c.quantity AS cartquantity,
     c.inventory_id AS cart_inventory_id,
     c.application_user_id,
     cat.id AS category_id,
-    cat."name" categoryName,
-    ii.id itemImageId,
+    cat.name AS categoryname,
+    ii.id AS itemimageid,
     ii.url,
-    ii.public_id
-FROM fleamarket.inventory i
-    join fleamarket.subcategory sub
-	on i.subcategory_id  = sub.id
-join fleamarket.category cat
-	on sub.category_id = cat.id
-join fleamarket.item_image ii
-	on i.id = ii.inventory_id
-	and ii.id = (select id from fleamarket.item_image where inventory_id = i.id limit 1)
-left join fleamarket.cart c
-	on i.id = c.inventory_id
+    ii.public_id,
+    sub.id as subcategory_id,
+    sub."name" as subcategoryname
+   FROM fleamarket.inventory i
+     JOIN fleamarket.subcategory sub ON i.subcategory_id = sub.id
+     JOIN fleamarket.category cat ON sub.category_id = cat.id
+     JOIN fleamarket.item_image ii ON i.id = ii.inventory_id AND ii.id = (( SELECT item_image.id
+           FROM fleamarket.item_image
+          WHERE item_image.inventory_id = i.id
+         LIMIT 1))
+     LEFT JOIN fleamarket.cart c ON i.id = c.inventory_id;
